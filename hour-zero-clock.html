@@ -1,0 +1,460 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Hour Zero Clock: Emergency Timers for Power Outages, Boil-Water Notices, Evacuations | Hour Zero Ready</title>
+<meta name="description" content="Free emergency timers for home: how long your fridge and freezer stay safe in a power outage, a boil-water timer and bleach calculator, an evacuation countdown with a grab list, and a water supply calculator. Based on USDA, FEMA, CDC and EPA guidance.">
+<link rel="canonical" href="https://elimha12.github.io/hz-app/hour-zero-clock.html">
+<meta property="og:title" content="Hour Zero Clock: the emergency timer for your home">
+<meta property="og:description" content="Power out, boil-water notice, evacuation order or no water? Live countdowns and exactly what to do next.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://elimha12.github.io/hz-app/hour-zero-clock.html">
+<meta name="theme-color" content="#0D1220">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600;700;800&family=Oswald:wght@500;600;700&display=swap" rel="stylesheet">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"Hour Zero Clock","applicationCategory":"UtilitiesApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"description":"Emergency timers for power outages, boil-water notices, evacuations and water outages, based on USDA, FEMA, CDC and EPA guidance.","publisher":{"@type":"Organization","name":"Hour Zero Ready"}}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"How long is food safe in the fridge without power?","acceptedAnswer":{"@type":"Answer","text":"About 4 hours if the door stays closed (USDA). After that, throw out refrigerated perishables such as meat, poultry, fish, eggs and leftovers."}},
+{"@type":"Question","name":"How long does a freezer stay cold without power?","acceptedAnswer":{"@type":"Answer","text":"About 48 hours if full and about 24 hours if half full, with the door closed (USDA)."}},
+{"@type":"Question","name":"How long do you boil water during a boil-water notice?","acceptedAnswer":{"@type":"Answer","text":"Bring it to a rolling boil for 1 minute, or 3 minutes above 6,500 feet (CDC)."}},
+{"@type":"Question","name":"How much bleach do you add to a gallon of water?","acceptedAnswer":{"@type":"Answer","text":"For unscented bleach: 8 drops per gallon of 6% bleach or 6 drops of 8.25% bleach. Stir and wait 30 minutes (EPA)."}},
+{"@type":"Question","name":"How much water do you need per person in an emergency?","acceptedAnswer":{"@type":"Answer","text":"At least 1 gallon per person per day for drinking and sanitation (FEMA, Ready.gov)."}}]}
+</script>
+<style>
+:root{
+  --ink:#0D1220; --panel:#141B2D; --panel2:#19223A; --line:#26314D;
+  --cream:#ECE6DA; --mute:#98A1B6; --lamp:#F2B04A; --frost:#8EC5E8; --alert:#E5604D; --ok:#7BC59A; --teal:#6FD3C1; --ac:#F2B04A;
+  --r:18px;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--ink);color:var(--cream);font:17px/1.55 "Inter Tight",system-ui,-apple-system,"Segoe UI",sans-serif;-webkit-font-smoothing:antialiased;min-height:100vh}
+a{color:var(--lamp)}
+button,input{font:inherit;color:inherit}
+:focus-visible{outline:3px solid var(--lamp);outline-offset:3px;border-radius:8px}
+#sky{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:0}
+.glow{position:fixed;inset:0;pointer-events:none;z-index:0;background:radial-gradient(60vmax 45vmax at 50% -12%,color-mix(in srgb,var(--ac) 16%,transparent),transparent 62%);transition:background .6s}
+.wrap{max-width:600px;margin:0 auto;padding:24px 18px 64px;position:relative;z-index:1}
+header{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:20px}
+.brand{font-family:Oswald,sans-serif;font-weight:600;font-size:30px;line-height:1;letter-spacing:.3px;background:none;border:0;padding:0;cursor:pointer;text-align:left}
+.brand small{display:block;font-family:"Inter Tight";font-weight:500;font-size:13px;color:var(--mute);margin-top:5px}
+.ghost{background:none;border:1px solid var(--line);border-radius:999px;padding:7px 14px;font-size:14px;color:var(--mute);cursor:pointer}
+.ghost:hover{color:var(--cream);border-color:var(--mute)}
+h1,h2,h3,h4{margin:0}
+.hero h1{font-family:Oswald,sans-serif;font-weight:600;font-size:clamp(36px,9vw,52px);line-height:1.04;margin:6px 0 10px}
+.hero p{color:var(--mute);margin:0 0 22px;max-width:30em}
+.tiles{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.tile{position:relative;text-align:left;background:var(--panel);border:1px solid var(--line);border-radius:22px;padding:18px 16px 16px;cursor:pointer;min-height:168px;display:flex;flex-direction:column;justify-content:space-between;overflow:hidden;transition:border-color .2s,transform .2s}
+.tile:hover{border-color:var(--tc);transform:translateY(-2px)}
+.tile svg{width:46px;height:46px}
+.tile b{font-family:Oswald,sans-serif;font-weight:600;font-size:24px;line-height:1.05;display:block;margin-top:14px}
+.tile span{color:var(--mute);font-size:14px;line-height:1.35;display:block;margin-top:6px}
+.tile::after{content:"";position:absolute;right:-40px;top:-40px;width:120px;height:120px;border-radius:50%;background:var(--tc);opacity:.08}
+.trust{margin-top:22px;color:var(--mute);font-size:14px}
+/* switcher */
+.switch{display:flex;gap:8px;overflow-x:auto;margin:-4px -18px 18px;padding:4px 18px;scrollbar-width:none}
+.switch::-webkit-scrollbar{display:none}
+.switch button{flex:none;background:var(--panel);border:1px solid var(--line);border-radius:999px;padding:8px 14px;font-weight:600;font-size:14px;cursor:pointer;color:var(--mute)}
+.switch button[aria-current="true"]{background:var(--ac);border-color:var(--ac);color:#14100A}
+/* setup */
+.q{font-family:Oswald,sans-serif;font-weight:600;font-size:32px;line-height:1.1;margin-bottom:6px}
+.hint{color:var(--mute);font-size:15px;margin:0 0 18px}
+.chips{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:16px}
+.chip{background:var(--panel);border:1px solid var(--line);border-radius:999px;padding:11px 18px;font-weight:600;cursor:pointer}
+.chip:hover{border-color:var(--ac)}
+.chip[aria-pressed="true"]{background:var(--ac);border-color:var(--ac);color:#14100A}
+.field{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:20px}
+.field label{color:var(--mute);font-size:15px}
+input[type=datetime-local]{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:10px 12px;color-scheme:dark}
+.row{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:14px;flex-wrap:wrap}
+.row > span{color:var(--mute);font-size:15px}
+.seg{display:inline-flex;background:var(--panel);border:1px solid var(--line);border-radius:999px;padding:4px}
+.seg button{background:none;border:0;border-radius:999px;padding:8px 14px;white-space:nowrap;font-weight:600;cursor:pointer;color:var(--mute);font-size:15px}
+.seg button[aria-pressed="true"]{background:var(--cream);color:var(--ink)}
+.step{display:inline-flex;align-items:center;background:var(--panel);border:1px solid var(--line);border-radius:999px}
+.step button{background:none;border:0;width:40px;height:40px;font-size:22px;cursor:pointer;color:var(--cream)}
+.step output{min-width:44px;text-align:center;font-weight:800}
+.go{display:block;width:100%;margin-top:8px;background:var(--ac);color:#14100A;border:0;border-radius:14px;padding:16px;font-weight:800;font-size:18px;cursor:pointer}
+.go:disabled{opacity:.35;cursor:default}
+/* hero ring */
+.ringbox{position:relative;width:min(330px,84vw);aspect-ratio:1;margin:4px auto 6px}
+.ringbox svg{width:100%;height:100%;display:block}
+.center{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;pointer-events:none}
+.center .lbl{color:var(--mute);font-size:14px;margin-bottom:2px}
+.digits{font-family:Oswald,sans-serif;font-weight:600;font-size:clamp(44px,13vw,62px);line-height:1;font-variant-numeric:tabular-nums;letter-spacing:.5px}
+.digits small{font-size:.5em;color:var(--mute);margin-left:2px}
+.center .sub{color:var(--mute);font-size:13px;margin-top:8px;max-width:180px;line-height:1.35}
+.done .digits{color:var(--alert)}
+.pulse{animation:pulse 1.6s ease-in-out infinite}
+@keyframes pulse{50%{opacity:.55}}
+.meta{display:flex;justify-content:center;gap:14px;flex-wrap:wrap;color:var(--mute);font-size:14px;margin-bottom:18px}
+.meta b{color:var(--cream);font-weight:700}
+/* timer cards */
+.timers{display:grid;gap:10px;margin-bottom:24px}
+.tc{display:grid;grid-template-columns:62px 1fr auto;gap:4px 14px;align-items:center;background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:14px 16px}
+.tc svg{width:62px;height:62px;grid-row:1 / span 2}
+.tc h3{font-size:16px;font-weight:700}
+.tc .w{color:var(--mute);font-size:14px;line-height:1.35}
+.tc .d{grid-row:1 / span 2;grid-column:3;font-family:Oswald,sans-serif;font-weight:600;font-size:30px;font-variant-numeric:tabular-nums;text-align:right;line-height:1}
+.tc.over{border-color:rgba(229,96,77,.6);background:linear-gradient(0deg,rgba(229,96,77,.08),rgba(229,96,77,.08)),var(--panel)}
+.tc.over .d{color:var(--alert)}
+.tc .act{grid-column:1 / -1;display:flex;gap:8px;margin-top:8px}
+.tc .act > button{background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:8px 12px;font-weight:700;font-size:14px;cursor:pointer}
+.tc .act > button.pri{background:var(--ac);border-color:var(--ac);color:#14100A}
+/* sections */
+.sec{margin-bottom:26px}
+.sec h2{font-family:Oswald,sans-serif;font-weight:600;font-size:26px;margin-bottom:4px}
+.sec .sub{color:var(--mute);font-size:15px;margin:0 0 12px}
+.todo{list-style:none;margin:0;padding:0;display:grid;gap:8px}
+.todo li{display:flex;gap:14px;align-items:flex-start;background:var(--panel);border-radius:14px;padding:13px 16px;cursor:pointer;user-select:none;transition:opacity .2s}
+.todo .box{flex:none;width:24px;height:24px;border:2px solid var(--mute);border-radius:7px;margin-top:1px;display:flex;align-items:center;justify-content:center}
+.todo li.done{opacity:.5}
+.todo li.done .box{background:var(--ok);border-color:var(--ok)}
+.todo li.done .box::after{content:"";width:6px;height:11px;border:solid #0D1220;border-width:0 3px 3px 0;transform:rotate(45deg) translate(-1px,-1px)}
+.todo .n{font-family:Oswald;font-weight:600;color:var(--ac);min-width:20px}
+.prog{display:flex;align-items:center;gap:12px;margin:0 0 12px;color:var(--mute);font-size:15px}
+.prog .pb{flex:1;height:8px;border-radius:8px;background:var(--line);overflow:hidden}
+.prog .pb b{display:block;height:100%;background:var(--ok);transition:width .3s}
+/* CO */
+.co{border:2px solid rgba(229,96,77,.6);border-radius:var(--r);padding:18px 18px 14px;margin-bottom:26px;background:rgba(229,96,77,.06)}
+.co h2{font-family:Oswald,sans-serif;font-weight:600;font-size:23px;color:#F08A7A;margin-bottom:8px}
+.co ul{margin:0;padding-left:20px}.co li{margin-bottom:6px}
+/* sorter */
+.sorter{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+.food{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:12px;display:flex;flex-direction:column;gap:8px;min-height:118px}
+.food .top{display:flex;align-items:center;gap:10px;font-weight:700;font-size:15px;line-height:1.2}
+.food .em{font-size:28px;line-height:1}
+.food .btns{display:flex;gap:6px;margin-top:auto}
+.food .btns button{flex:1;border-radius:10px;border:1px solid var(--line);background:var(--panel2);padding:7px 0;font-weight:700;font-size:14px;cursor:pointer}
+.food.res{border-color:var(--rc)}
+.food .why{font-size:13px;color:var(--mute);line-height:1.35}
+.food .verdict{font-family:Oswald;font-weight:600;font-size:18px;color:var(--rc)}
+.score{font-family:Oswald;font-weight:600;font-size:20px;margin:12px 0 0}
+/* tables */
+.uses{display:grid;gap:6px}
+.use{display:flex;gap:12px;align-items:flex-start;background:var(--panel);border-radius:12px;padding:11px 14px;font-size:15px}
+.use i{font-style:normal;flex:none;width:26px;height:26px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:14px}
+.use .y{background:var(--ok);color:#0D1220}.use .x{background:var(--alert);color:#fff}.use .m{background:var(--lamp);color:#14100A}
+.calc{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:16px 18px}
+.big{font-family:Oswald;font-weight:600;font-size:46px;line-height:1;color:var(--ac)}
+input[type=range]{width:100%;accent-color:var(--ac)}
+details{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);margin-bottom:10px}
+summary{cursor:pointer;padding:16px 18px;font-weight:700;list-style:none;display:flex;justify-content:space-between;align-items:center;gap:10px}
+summary::-webkit-details-marker{display:none}
+summary::after{content:"+";font-size:22px;color:var(--mute);line-height:1}
+details[open] summary::after{content:"–"}
+.dbody{padding:0 18px 16px}
+.small{font-size:14px;color:var(--mute)}
+.share{display:flex;gap:10px;flex-wrap:wrap;margin:6px 0 28px}
+.share button{flex:1;min-width:150px;background:var(--panel2);border:1px solid var(--line);border-radius:14px;padding:13px;font-weight:700;cursor:pointer}
+.wake{display:flex;align-items:center;gap:10px;font-size:15px;color:var(--mute);margin:0 0 20px;justify-content:center}
+.sw{width:42px;height:24px;border-radius:999px;background:var(--line);position:relative;border:0;cursor:pointer;padding:0}
+.sw::after{content:"";position:absolute;left:3px;top:3px;width:18px;height:18px;border-radius:50%;background:var(--mute);transition:left .15s}
+.sw[aria-checked="true"]{background:var(--ac)}.sw[aria-checked="true"]::after{left:21px;background:#14100A}
+.book{display:grid;grid-template-columns:auto 1fr;gap:18px;align-items:center;background:linear-gradient(135deg,#1A2542,#141B2D);border:1px solid var(--line);border-radius:22px;padding:20px;margin:8px 0 24px}
+.book .cv{width:74px;height:110px;border-radius:4px;background:#0E1A30;box-shadow:0 10px 24px rgba(0,0,0,.45);display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;font-family:Oswald;line-height:1;padding:6px;border:1px solid #22304F}
+.book .cv b{font-size:17px}.book .cv i{font-style:normal;font-size:11px;color:var(--lamp);margin-top:3px}
+.book p{margin:0 0 10px;font-size:15px;color:#D7D1C5}
+.book a.btn{display:inline-block;background:var(--lamp);color:#1B1305;text-decoration:none;font-weight:800;border-radius:12px;padding:10px 16px;font-size:15px;margin:4px 8px 0 0}
+.book a.lnk{font-size:15px}
+footer{color:var(--mute);font-size:13px;border-top:1px solid var(--line);padding-top:16px}
+footer p{margin:0 0 8px}
+.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%) translateY(80px);opacity:0;visibility:hidden;background:var(--cream);color:var(--ink);padding:10px 18px;border-radius:999px;font-weight:700;transition:transform .25s,opacity .25s;z-index:5}
+.toast.on{transform:translateX(-50%);opacity:1;visibility:visible}
+.hide{display:none!important}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+@media (max-width:400px){.tiles{gap:10px}.tile{min-height:150px;padding:14px}.tile b{font-size:21px}}
+</style>
+</head>
+<body>
+<canvas id="sky" aria-hidden="true"></canvas><div class="glow" id="glow"></div>
+<div class="wrap">
+  <header>
+    <button class="brand" id="home" type="button">Hour Zero Clock<small>by Hour Zero Ready</small></button>
+    <button class="ghost hide" id="reset" type="button">Start over</button>
+  </header>
+  <div class="switch hide" id="switch" role="tablist" aria-label="Situations"></div>
+  <main id="app"></main>
+
+  <aside class="book">
+    <div class="cv"><b>72 HOURS</b><i>TO 6 MONTHS</i></div>
+    <div>
+      <p>These timers come from the free tools in <b>72 Hours to 6 Months</b>, a calm, step-by-step plan for power, water, food, medicine and money when systems fail. Start this weekend with about $100.</p>
+      <a class="btn" href="https://elimdal.gumroad.com/l/zcgejs" target="_blank" rel="noopener">Get the free 60-minute checklist</a>
+      <a class="lnk" href="https://elimdal.gumroad.com/l/yqudvq" target="_blank" rel="noopener">See the full guide</a>
+    </div>
+  </aside>
+  <footer>
+    <p>Sources: USDA and FoodSafety.gov (food in power outages), FEMA and Ready.gov (power outages, water, evacuation, medicine), CDC (boiling water, boil-water advisories, carbon monoxide), EPA (emergency disinfection of drinking water), CPSC (generators), FDA (insulin).</p>
+    <p>Educational only. Always follow your local officials, your utility and your water provider. Food times assume the fridge and freezer stay closed.</p>
+    <p>Your timers are saved only in this browser. Nothing you enter leaves your device.</p>
+  </footer>
+</div>
+<div class="toast" id="toast" role="status"></div>
+
+<script>
+(function(){
+const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
+const H=3600e3, M=60e3;
+const store={get(k){try{return localStorage.getItem(k)}catch(e){return null}},set(k,v){try{localStorage.setItem(k,v)}catch(e){}},del(k){try{localStorage.removeItem(k)}catch(e){}}};
+const ICON={
+ power:'<svg viewBox="0 0 48 48" fill="none"><path d="M24 6c-7.2 0-13 5.6-13 12.6 0 4.6 2.5 7.7 4.6 10 1.3 1.4 2.4 2.7 2.4 4.4V36h12v-3c0-1.7 1.1-3 2.4-4.4 2.1-2.3 4.6-5.4 4.6-10C37 11.6 31.2 6 24 6Z" stroke="currentColor" stroke-width="3"/><path d="M19 41h10M8 8l32 32" stroke="currentColor" stroke-width="3" stroke-linecap="round"/></svg>',
+ boil:'<svg viewBox="0 0 48 48" fill="none"><path d="M8 22h32v12a8 8 0 0 1-8 8H16a8 8 0 0 1-8-8V22Z" stroke="currentColor" stroke-width="3"/><path d="M40 26h4M4 26h4M17 6c-2 3 2 5 0 8M24 4c-2 3 2 5 0 8M31 6c-2 3 2 5 0 8" stroke="currentColor" stroke-width="3" stroke-linecap="round"/></svg>',
+ evac:'<svg viewBox="0 0 48 48" fill="none"><path d="M10 40V18l14-10 14 10v22" stroke="currentColor" stroke-width="3" stroke-linejoin="round"/><path d="M20 40V28h8v12" stroke="currentColor" stroke-width="3"/><path d="M30 24h14m0 0-5-5m5 5-5 5" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+ water:'<svg viewBox="0 0 48 48" fill="none"><path d="M24 5s-13 14.5-13 24a13 13 0 0 0 26 0C37 19.5 24 5 24 5Z" stroke="currentColor" stroke-width="3"/><path d="M8 8l32 32" stroke="currentColor" stroke-width="3" stroke-linecap="round"/></svg>'};
+const SC={
+ power:{name:'Power outage',short:'Power',ac:'#F2B04A',line:'How long the fridge and freezer stay safe, and what to do now.',fx:'snow'},
+ boil:{name:'Boil-water notice',short:'Boil water',ac:'#6FD3C1',line:'Boil timer, bleach calculator, and what tap water is OK for.',fx:'steam'},
+ evac:{name:'Evacuation order',short:'Evacuate',ac:'#F07A5A',line:'A countdown and a grab list in the right order.',fx:'beacon'},
+ water:{name:'Water is off',short:'No water',ac:'#8EC5E8',line:'How long your stored water lasts, and hidden water at home.',fx:'drops'}};
+let S={scn:null,power:{},boil:{alt:'low',str:'6',gal:1},evac:{},water:{people:2,gal:6}};
+try{const j=JSON.parse(store.get('hzc')||'null');if(j)S=Object.assign(S,j)}catch(e){}
+// URL params (shared links)
+const qp=new URLSearchParams(location.search);
+if(qp.get('s')&&SC[qp.get('s')]){S.scn=qp.get('s');const t=Date.parse(qp.get('since')||'');
+ if(S.scn==='power'&&!isNaN(t))S.power={since:t,fz:qp.get('fz')==='half'?'half':'full',med:qp.get('med')==='1',done:{}};
+ if(S.scn==='water'&&!isNaN(t))S.water={since:t,people:+qp.get('p')||2,gal:+qp.get('g')||6};
+ if(S.scn==='evac'&&!isNaN(Date.parse(qp.get('end')||'')))S.evac={end:Date.parse(qp.get('end')),mins:+qp.get('m')||15,done:{}};}
+const save=()=>store.set('hzc',JSON.stringify(S));
+function toast(t){const e=$('#toast');e.textContent=t;e.classList.add('on');clearTimeout(e._t);e._t=setTimeout(()=>e.classList.remove('on'),2200)}
+const pad=n=>String(n).padStart(2,'0');
+const hms=ms=>{ms=Math.max(0,ms);const s=Math.floor(ms/1000),h=Math.floor(s/3600),m=Math.floor(s%3600/60);return `${h}:${pad(m)}:${pad(s%60)}`};
+const ms_=ms=>{ms=Math.max(0,ms);const s=Math.ceil(ms/1000);return `${Math.floor(s/60)}:${pad(s%60)}`};
+const fmtTime=t=>{const d=new Date(t),now=new Date();const tm=d.toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit'});if(d.toDateString()===now.toDateString())return tm;if(new Date(now.getTime()+864e5).toDateString()===d.toDateString())return 'tomorrow '+tm;return d.toLocaleDateString('en-US',{weekday:'short'})+' '+tm};
+const ring=(r,stroke,id,w=16)=>`<circle cx="0" cy="0" r="${r}" fill="none" stroke="#1E2740" stroke-width="${w}"/><circle id="${id}" cx="0" cy="0" r="${r}" fill="none" stroke="${stroke}" stroke-width="${w}" stroke-linecap="round" transform="rotate(-90)"/>`;
+function setRing(id,frac,col){const e=document.getElementById(id);if(!e)return;const r=+e.getAttribute('r'),C=2*Math.PI*r,f=Math.max(0,Math.min(1,frac));e.setAttribute('stroke-dasharray',`${C*f} ${C}`);e.style.opacity=f<=0.0005?0:1;if(col)e.setAttribute('stroke',col)}
+// todo list with persistence
+function todo(listEl,items,bag,numbered){listEl.innerHTML='';items.forEach(([html,id],i)=>{const li=document.createElement('li');li.tabIndex=0;li.setAttribute('role','checkbox');const on=!!bag[id];li.setAttribute('aria-checked',on);if(on)li.classList.add('done');
+ li.innerHTML=`<span class="box"></span>${numbered?`<span class="n">${i+1}</span>`:''}<span>${html}</span>`;const tg=()=>{bag[id]=!bag[id];save();todo(listEl,items,bag,numbered);listEl.dispatchEvent(new Event('change'))};
+ li.addEventListener('click',tg);li.addEventListener('keydown',e=>{if(e.key===' '||e.key==='Enter'){e.preventDefault();tg()}});listEl.appendChild(li)})}
+const CO=`<div class="co"><h2>Carbon monoxide can't be seen or smelled</h2><ul>
+ <li>Run a generator <b>outside only</b>, at least 20 feet from windows, doors and vents. Never in a garage, even with the door open.</li>
+ <li>Never use a grill, camp stove or charcoal indoors. Never heat your home with the oven.</li>
+ <li>Use a battery or battery-backup CO alarm near every sleeping area.</li>
+ <li>Alarm going off, or feeling dizzy or sick? <b>Get outside to fresh air, then call 911.</b></li></ul></div>`;
+const SHARE=`<div class="wake" id="wakeRow"><button class="sw" id="wake" role="switch" aria-checked="false" aria-label="Keep screen awake"></button><span>Keep screen awake</span></div>`;
+const SHAREBTN=`<div class="share"><button type="button" id="shareBtn">Share with family</button><button type="button" id="copyBtn">Copy link</button></div>`;
+
+// ---------- HOME ----------
+function home(){
+ setScene(null);
+ $('#app').innerHTML=`<section class="hero"><h1>Something just went wrong at home?</h1><p>Pick what's happening. We'll start the right timers and show you what to do, minute by minute.</p>
+ <div class="tiles">${Object.entries(SC).map(([k,v])=>`<button class="tile" type="button" data-go="${k}" style="--tc:${v.ac}"><span style="color:${v.ac};margin:0">${ICON[k]}</span><div><b>${v.name}</b><span>${v.line}</span></div></button>`).join('')}</div>
+ <p class="trust">Free, no sign-up, works on your phone. Based on USDA, FEMA, CDC and EPA guidance.</p></section>`;
+ $$('[data-go]').forEach(b=>b.onclick=()=>{S.scn=b.dataset.go;save();route()});
+}
+function switcher(){const sw=$('#switch');sw.innerHTML=Object.entries(SC).map(([k,v])=>`<button type="button" role="tab" data-sw="${k}" aria-current="${S.scn===k}">${v.short}</button>`).join('');sw.classList.remove('hide');$$('[data-sw]').forEach(b=>b.onclick=()=>{S.scn=b.dataset.sw;save();route()})}
+
+// ---------- POWER ----------
+const P_STAGES=[
+ {to:1*H,sub:'The first hour.',items:[['Use <b>flashlights, not candles.</b>','light'],['<b>Unplug TVs and computers.</b> Power can come back with a surge.','unplug'],['<b>Keep the fridge and freezer closed.</b> Every opening lets the cold out.','doors'],['<b>Fill the bathtub</b> for flushing toilets. Not for drinking.','tub'],['<b>Save your phone:</b> dim the screen and close apps you don\'t need.','phone'],['<b>Check on neighbors</b> who live alone or use medical devices.','neighbors']]},
+ {to:4*H,sub:'Hours 1 to 4. The fridge is still holding.',items:[['Keep the fridge closed. <b>Eat from the fridge first,</b> then the freezer, then the pantry.','order'],['<b>Texts often get through</b> when calls don\'t. Keep messages short.','text'],['Get news from a <b>battery or hand-crank radio</b>, or your local alerts.','radio'],['<b>Check on neighbors</b> who live alone or use medical devices.','neighbors2']]},
+ {to:24*H,sub:'The fridge is past 4 hours.',items:[['<b>Toss fridge perishables:</b> meat, poultry, fish, eggs, dairy and leftovers. Try the sorter below.','toss'],['<b>Keep the freezer shut.</b> A freezer thermometer should read 0°F or below.','fzshut'],['Getting cold? <b>Gather in one room,</b> close the doors and wear layers.','warm'],['<b>Never heat your home</b> with the oven, a grill or a camp stove.','noheat']]},
+ {to:48*H,sub:'Day 2.',items:[['<b>Half-full freezer?</b> It reached about 24 hours. Food with ice crystals or at 40°F or below can be refrozen.','half'],['<b>Fridge medicine:</b> after more than a day without power, most should be replaced. Call your pharmacist.','med'],['<b>Water:</b> plan on 1 gallon per person, per day.','water'],['Can\'t keep the house warm? <b>Stay with family or friends</b> or ask about a local warming center.','shelter']]},
+ {to:Infinity,sub:'Past 48 hours.',items:[['<b>Full freezer</b> reached about 48 hours. Ice crystals or 40°F and below can be refrozen; toss the rest.','full'],['<b>Never taste food</b> to check it. When in doubt, throw it out.','taste'],['<b>Water:</b> plan on 1 gallon per person, per day.','water2'],['Can\'t keep the house warm? <b>Stay with family or friends</b> or ask about a local warming center.','shelter2']]}];
+const FOODS=[['🥩','Raw meat','toss'],['🍗','Leftover chicken','toss'],['🥛','Milk','toss'],['🥚','Eggs','toss'],['🧀','Hard cheese','keep'],['🧈','Butter','keep'],['🍞','Bread','keep'],['🥣','Yogurt','toss'],['🍎','Whole apples','keep'],['🍉','Cut melon','toss'],['🍝','Cooked pasta','toss'],['🥜','Peanut butter','keep'],['🌭','Mustard & ketchup','keep'],['🧃','Opened fruit juice','keep']];
+function power(){
+ const P=S.power;
+ if(!P.since){
+  $('#app').innerHTML=`<section><h1 class="q">When did your power go out?</h1><p class="hint">We'll count down how long your fridge and freezer food stays safe.</p>
+  <div class="chips" id="quick">${[['Just now',0],['30 min ago',30],['1 hour ago',60],['2 hours ago',120],['4 hours ago',240],['8 hours ago',480]].map(([l,m])=>`<button class="chip" type="button" data-ago="${m}">${l}</button>`).join('')}</div>
+  <div class="field"><label for="exact">Or pick the exact time</label><input type="datetime-local" id="exact"></div>
+  <div class="row"><span>How full is your freezer?</span><div class="seg" id="fz"><button type="button" data-v="full" aria-pressed="true">Full</button><button type="button" data-v="half" aria-pressed="false">Half full</button></div></div>
+  <div class="row"><span>Medicine that needs the fridge?</span><div class="seg" id="med"><button type="button" data-v="1" aria-pressed="false">Yes</button><button type="button" data-v="0" aria-pressed="true">No</button></div></div>
+  <button class="go" id="start" type="button" disabled>Start the timers</button></section>`;
+  let pick=null,fz='full',med=false;
+  $$('#quick .chip').forEach(b=>b.onclick=()=>{$$('#quick .chip').forEach(x=>x.setAttribute('aria-pressed',x===b));pick=Date.now()-(+b.dataset.ago)*M;$('#exact').value='';$('#start').disabled=false});
+  $('#exact').oninput=e=>{const t=Date.parse(e.target.value);$$('#quick .chip').forEach(x=>x.setAttribute('aria-pressed','false'));pick=isNaN(t)?null:t;$('#start').disabled=pick===null};
+  segs('#fz',v=>fz=v);segs('#med',v=>med=v==='1');
+  $('#start').onclick=()=>{if(pick>Date.now()+M){toast('That time is in the future.');return}S.power={since:Math.min(pick,Date.now()),fz,med,done:{}};save();route()};
+  return;}
+ const FZ=(P.fz==='half'?24:48);
+ $('#app').innerHTML=`<div class="ringbox" id="rb"><svg viewBox="-170 -170 340 340" aria-hidden="true"><g id="ticks"></g>${ring(150,'#8EC5E8','rFz')}${ring(118,'#F2B04A','rFr')}</svg>
+  <div class="center"><div class="lbl" id="hLbl">Fridge food safe for</div><div class="digits" id="hD">0:00:00</div><div class="sub" id="hSub"></div></div></div>
+  <div class="meta"><span>Out for <b id="elapsed">0:00:00</b></span><span>since <b>${fmtTime(P.since)}</b></span></div>${SHARE}
+  <div class="timers" id="tcs"></div>
+  <div class="sec"><h2>Do these now</h2><p class="sub" id="stSub"></p><ul class="todo" id="todo"></ul></div>
+  ${CO}
+  <div class="sec" id="sorterSec"><h2>Keep or toss?</h2><p class="sub">Once fridge food has been above 40°F for more than 2 hours. Tap your guess.</p><div class="sorter" id="sorter"></div><div class="score" id="score"></div></div>
+  <details id="dFz"><summary>Freezer thawed: can I refreeze it?</summary><div class="dbody"><p style="margin-top:0">Yes, if the food still has <b>ice crystals</b> or is at <b>40°F or below</b>. Quality may drop, but it's safe (USDA).</p><p class="small" style="margin:0">Don't store food outside in the snow: the temperature changes and animals can get to it. Freeze jugs of water outside and put the ice in a cooler instead.</p></div></details>
+  <details id="dMed" class="${P.med?'':'hide'}"><summary>Medicine that needs the fridge</summary><div class="dbody"><p style="margin-top:0">If the power is out for <b>more than a day</b>, throw out medicine that should be refrigerated unless the label says otherwise, and contact your doctor or pharmacist for a new supply (Ready.gov).</p><p style="margin:0 0 8px"><b>Insulin is different.</b> Vials and cartridges can stay unrefrigerated at 59–86°F for up to 28 days. Never use insulin that froze (FDA).</p><p class="small" style="margin:0">Check your medicine's label and ask your pharmacist. This tool is not medical advice.</p></div></details>
+  ${SHAREBTN}`;
+ let g='';for(let i=0;i<48;i++){const a=i/48*2*Math.PI-Math.PI/2,big=i%6===0;g+=`<line x1="${Math.cos(a)*164}" y1="${Math.sin(a)*164}" x2="${Math.cos(a)*(big?172:168)}" y2="${Math.sin(a)*(big?172:168)}" stroke="#3A4766" stroke-width="${big?2:1}"/>`}$('#ticks').innerHTML=g;
+ const T=[{id:'fr',name:'Fridge',dur:4*H,col:'#F2B04A',ok:'Safe until',over:'Passed 4 hours. Check the sorter below.'},{id:'fz',name:P.fz==='half'?'Freezer (half full)':'Freezer (full)',dur:FZ*H,col:'#8EC5E8',ok:'Holds until about',over:`Passed about ${FZ} hours. Check each item before refreezing.`}];
+ if(P.med)T.push({id:'md',name:'Fridge medicine',dur:24*H,col:'#C79BF2',ok:'Check by',over:'More than a day. Call your pharmacist.'});
+ $('#tcs').innerHTML=T.map(t=>`<div class="tc" id="tc_${t.id}"><svg viewBox="-36 -36 72 72">${ring(28,t.col,'mr_'+t.id,8)}</svg><h3>${t.name}</h3><div class="w" id="w_${t.id}"></div><div class="d" id="d_${t.id}"></div></div>`).join('');
+ FOODS.forEach(()=>{});renderSorter();
+ let last=-1;
+ TICK=()=>{const now=Date.now(),el=now-P.since;$('#elapsed').textContent=hms(el);
+  const fr=el/(4*H),fz=el/(FZ*H);setRing('rFr',fr,fr>=1?'#E5604D':'#F2B04A');setRing('rFz',fz,fz>=1?'#E5604D':'#8EC5E8');
+  const rb=$('#rb');const left=4*H-el;
+  if(left>0){rb.classList.remove('done');$('#hLbl').textContent='Fridge food safe for';$('#hD').textContent=hms(left);$('#hSub').textContent='until '+fmtTime(P.since+4*H)+', door closed';$('#hD').classList.remove('pulse')}
+  else{rb.classList.add('done');const fl=FZ*H-el;$('#hLbl').textContent=fl>0?'Freezer holds for':'Freezer time is up';$('#hD').textContent=fl>0?hms(fl):'0:00:00';$('#hSub').textContent=fl>0?'Fridge passed 4 hours. Freezer good until '+fmtTime(P.since+FZ*H):'Check each item before refreezing';if(fl<=0)$('#hD').classList.add('pulse');if(fl>0){rb.classList.remove('done')}}
+  T.forEach(t=>{const l=t.dur-el,c=$('#tc_'+t.id);setRing('mr_'+t.id,el/t.dur,l<=0?'#E5604D':t.col);
+   if(l>0){c.classList.remove('over');$('#d_'+t.id).textContent=hms(l);$('#w_'+t.id).textContent=`${t.ok} ${fmtTime(P.since+t.dur)}`}else{c.classList.add('over');$('#d_'+t.id).textContent='Time\'s up';$('#w_'+t.id).textContent=t.over}});
+  const si=P_STAGES.findIndex(s=>el<s.to);if(si!==last){last=si;$('#stSub').textContent=P_STAGES[si].sub;todo($('#todo'),P_STAGES[si].items,P.done||(P.done={}));if(el>=FZ*H)$('#dFz').open=true;if(P.med&&el>=24*H)$('#dMed').open=true}
+  document.title=(left>0?`Fridge ${hms(left)}`:'Fridge: time\'s up')+' | Hour Zero Clock';};
+ shareLink=()=>{const u=base();u.searchParams.set('s','power');u.searchParams.set('since',new Date(P.since).toISOString());if(P.fz==='half')u.searchParams.set('fz','half');if(P.med)u.searchParams.set('med','1');return u};
+ shareText='Our power went out. This counts down how long the fridge and freezer stay safe.';
+}
+function renderSorter(){const P=S.power;P.sort=P.sort||{};const el=$('#sorter');
+ el.innerHTML=FOODS.map(([e,n,a],i)=>{const g=P.sort[i];if(!g)return `<div class="food"><div class="top"><span class="em">${e}</span>${n}</div><div class="btns"><button type="button" data-i="${i}" data-g="keep">Keep</button><button type="button" data-i="${i}" data-g="toss">Toss</button></div></div>`;
+  const right=g===a,col=a==='keep'?'var(--ok)':'var(--alert)';return `<div class="food res" style="--rc:${col}"><div class="top"><span class="em">${e}</span>${n}</div><div class="verdict">${a==='keep'?'Keep':'Toss'} ${right?'✓':''}</div><div class="why">${right?'You got it.':'Not quite.'} ${a==='keep'?'On the USDA keep list.':'On the USDA toss list.'}</div></div>`}).join('');
+ $$('#sorter [data-g]').forEach(b=>b.onclick=()=>{P.sort[b.dataset.i]=b.dataset.g;save();renderSorter()});
+ const n=Object.keys(P.sort).length,r=Object.entries(P.sort).filter(([i,g])=>FOODS[i][2]===g).length;
+ $('#score').innerHTML=n?`${r} of ${n} right${n===FOODS.length?' · <button class="ghost" id="again" type="button">Try again</button>':''}`:'';
+ const ag=$('#again');if(ag)ag.onclick=()=>{P.sort={};save();renderSorter()};
+ const sc=$('#score');if(sc&&n===FOODS.length)sc.insertAdjacentHTML('beforeend','<p class="small" style="font-family:Inter Tight;font-weight:500">Never taste food to check it. When in doubt, throw it out.</p>');}
+
+// ---------- BOIL ----------
+const DROPS={ '6':{0.25:'2 drops',1:'8 drops',2:'16 drops (1/4 tsp)',4:'1/3 teaspoon',8:'2/3 teaspoon'}, '8.25':{0.25:'2 drops',1:'6 drops',2:'12 drops (1/8 tsp)',4:'1/4 teaspoon',8:'1/2 teaspoon'} };
+const GALS=[[0.25,'1 quart'],[1,'1 gallon'],[2,'2 gallons'],[4,'4 gallons'],[8,'8 gallons']];
+function boil(){const B=S.boil;
+ $('#app').innerHTML=`<div class="ringbox" id="rb"><svg viewBox="-170 -170 340 340" aria-hidden="true">${ring(150,'#6FD3C1','rBoil')}${ring(118,'#8EC5E8','rBl')}</svg>
+  <div class="center"><div class="lbl" id="hLbl">Boil timer</div><div class="digits" id="hD">1:00</div><div class="sub" id="hSub">Start when the water reaches a rolling boil</div></div></div>${SHARE}
+  <div class="timers"><div class="tc" id="tc_b"><svg viewBox="-36 -36 72 72">${ring(28,'#6FD3C1','mr_b',8)}</svg><h3>Rolling boil</h3><div class="w" id="w_b"></div><div class="d" id="d_b"></div>
+   <div class="act" style="flex-wrap:wrap;align-items:center"><button class="pri" type="button" id="bStart">Start boil timer</button><div class="seg" id="alt"><button type="button" data-v="low" aria-pressed="${B.alt!=='high'}">Under 6,500 ft</button><button type="button" data-v="high" aria-pressed="${B.alt==='high'}">Higher</button></div></div></div>
+  <div class="tc" id="tc_c"><svg viewBox="-36 -36 72 72">${ring(28,'#8EC5E8','mr_c',8)}</svg><h3>Bleach wait</h3><div class="w" id="w_c"></div><div class="d" id="d_c"></div><div class="act"><button class="pri" type="button" id="cStart">Start 30-minute wait</button></div></div></div>
+  <div class="sec"><h2>Bleach calculator</h2><p class="sub">Use plain, unscented household bleach (5–9% sodium hypochlorite). Never scented, color-safe or splashless.</p>
+   <div class="calc"><div class="row" style="margin-bottom:6px"><span>Bleach strength</span><div class="seg" id="str"><button type="button" data-v="6" aria-pressed="${B.str!=='8.25'}">6%</button><button type="button" data-v="8.25" aria-pressed="${B.str==='8.25'}">8.25%</button></div></div>
+    <div class="row" style="margin-bottom:4px"><span>Water</span><b id="galL"></b></div><input type="range" min="0" max="4" step="1" id="gal" aria-label="Amount of water">
+    <div style="margin-top:14px"><div class="big" id="dose"></div><p class="small" style="margin:8px 0 0">Stir, then wait <b>30 minutes</b>. It should smell slightly of chlorine. No smell? Add the same dose again and wait 15 more minutes. Cloudy or very cold water: double the dose (EPA).</p></div></div></div>
+  <div class="sec"><h2>Is tap water OK for…</h2><p class="sub">During a boil-water notice, until officials say it's over (CDC).</p><div class="uses">
+   <div class="use"><i class="x">✕</i><div><b>Drinking, ice, baby formula</b><br><span class="small">Use bottled, boiled or treated water.</span></div></div>
+   <div class="use"><i class="x">✕</i><div><b>Brushing teeth</b><br><span class="small">Use boiled or bottled water.</span></div></div>
+   <div class="use"><i class="x">✕</i><div><b>Fridge water and ice dispensers</b></div></div>
+   <div class="use"><i class="m">!</i><div><b>Washing dishes</b><br><span class="small">Use disposables, or soak rinsed dishes 1 minute in 1 tsp unscented bleach per gallon of warm water. Dishwashers with a sanitize cycle are generally OK.</span></div></div>
+   <div class="use"><i class="m">!</i><div><b>Washing hands</b><br><span class="small">Often fine with soap and tap water. Follow your local officials.</span></div></div>
+   <div class="use"><i class="m">!</i><div><b>Bathing babies</b><br><span class="small">Sponge baths, so they don't swallow water.</span></div></div>
+   <div class="use"><i class="y">✓</i><div><b>Laundry and houseplants</b></div></div>
+   <div class="use"><i class="m">!</i><div><b>Pets</b><br><span class="small">Give them bottled or boiled water that has cooled.</span></div></div></div></div>
+  <details><summary>Cloudy water?</summary><div class="dbody"><p style="margin:0">Let it settle or filter it through a clean cloth, paper towel or coffee filter. Then boil or disinfect the clear water (CDC, EPA).</p></div></details>
+  ${SHAREBTN}`;
+ segs('#alt',v=>{B.alt=v;save()});segs('#str',v=>{B.str=v;save();calc()});
+ const gi=GALS.findIndex(g=>g[0]===B.gal);$('#gal').value=gi<0?1:gi;$('#gal').oninput=()=>{B.gal=GALS[+$('#gal').value][0];save();calc()};
+ function calc(){const g=GALS[+$('#gal').value];$('#galL').textContent=g[1];$('#dose').textContent=DROPS[B.str==='8.25'?'8.25':'6'][g[0]]}calc();
+ $('#bStart').onclick=()=>{B.boilEnd=Date.now()+(B.alt==='high'?3:1)*M;B.boilDur=(B.alt==='high'?3:1)*M;save()};
+ $('#cStart').onclick=()=>{B.bleachEnd=Date.now()+30*M;save()};
+ TICK=()=>{const now=Date.now();const bd=B.alt==='high'?3*M:1*M;
+  const bl=B.boilEnd?B.boilEnd-now:null, cl=B.bleachEnd?B.bleachEnd-now:null;
+  // card boil
+  if(bl===null){$('#d_b').textContent=ms_(bd);$('#w_b').textContent=B.alt==='high'?'3 minutes above 6,500 feet':'1 minute at a rolling boil';setRing('mr_b',0)}
+  else if(bl>0){$('#d_b').textContent=ms_(bl);$('#w_b').textContent='Keep it at a rolling boil';setRing('mr_b',1-bl/(B.boilDur||bd));$('#tc_b').classList.remove('over')}
+  else{$('#d_b').textContent='Done';$('#w_b').textContent='Let it cool. Store it in clean, covered containers.';setRing('mr_b',1,'#7BC59A')}
+  if(cl===null){$('#d_c').textContent='30:00';$('#w_c').textContent='After adding bleach and stirring';setRing('mr_c',0)}
+  else if(cl>0){$('#d_c').textContent=ms_(cl);$('#w_c').textContent='Ready at '+fmtTime(B.bleachEnd);setRing('mr_c',1-cl/(30*M))}
+  else{$('#d_c').textContent='Done';$('#w_c').textContent='Smell for a slight chlorine odor before using.';setRing('mr_c',1,'#7BC59A')}
+  // hero: the running timer
+  const act=(bl!==null&&bl>-5000)?'b':(cl!==null&&cl>0)?'c':(bl!==null?'b':'b');
+  if(act==='c'){$('#hLbl').textContent='Bleach wait';$('#hD').textContent=ms_(cl);$('#hSub').textContent='ready at '+fmtTime(B.bleachEnd)}
+  else if(bl===null){$('#hLbl').textContent='Boil timer';$('#hD').textContent=ms_(bd);$('#hSub').textContent='Start when the water reaches a rolling boil'}
+  else if(bl>0){$('#hLbl').textContent='Keep it boiling';$('#hD').textContent=ms_(bl);$('#hSub').textContent='rolling boil, bubbles that don\'t stop when stirred'}
+  else{$('#hLbl').textContent='Boil done';$('#hD').textContent='0:00';$('#hSub').textContent='Let it cool before storing'}
+  setRing('rBoil',bl===null?0:Math.min(1,1-bl/(B.boilDur||bd)),bl!==null&&bl<=0?'#7BC59A':'#6FD3C1');setRing('rBl',cl===null?0:Math.min(1,1-cl/(30*M)),cl!==null&&cl<=0?'#7BC59A':'#8EC5E8');
+  document.title=(act==='c'&&cl>0?`Bleach ${ms_(cl)}`:bl>0?`Boil ${ms_(bl)}`:'Boil-water notice')+' | Hour Zero Clock';};
+ shareLink=()=>{const u=base();u.searchParams.set('s','boil');return u};shareText='Boil-water notice: boil timer, bleach calculator and what tap water is OK for.';
+}
+
+// ---------- EVAC ----------
+const EV=[['<b>People and pets.</b> Leashes and carriers.','pp'],['<b>Medicines</b> (7-day supply), glasses, medical devices and chargers.','meds'],['<b>Go-bags</b>, water and snacks.','bags'],['<b>Phone and charger</b>, power bank.','phone'],['<b>IDs, insurance papers and cash</b> in small bills.','docs'],['<b>Sturdy shoes</b> and a warm layer.','shoes'],['<b>Text your out-of-state contact</b> where you\'re going.','text'],['<b>Lock</b> doors and windows. <b>Unplug</b> small electronics.','lock'],['<b>Leave a note</b> saying when you left and where you\'re going.','note'],['<b>Check on neighbors</b> who may need a ride.','nb']];
+function evac(){const E=S.evac;
+ if(!E.end){$('#app').innerHTML=`<section><h1 class="q">How long do you have before you leave?</h1><p class="hint">If officials say to leave, go. Use the time you have, and don't come back for things.</p>
+  <div class="chips" id="quick">${[5,10,15,30,60].map(m=>`<button class="chip" type="button" data-m="${m}">${m} minutes</button>`).join('')}</div>
+  <button class="go" id="start" type="button" disabled>Start the countdown</button></section>`;let mins=null;
+  $$('#quick .chip').forEach(b=>b.onclick=()=>{$$('#quick .chip').forEach(x=>x.setAttribute('aria-pressed',x===b));mins=+b.dataset.m;$('#start').disabled=false});
+  $('#start').onclick=()=>{S.evac={end:Date.now()+mins*M,mins,done:{}};save();route()};return;}
+ $('#app').innerHTML=`<div class="ringbox" id="rb"><svg viewBox="-170 -170 340 340" aria-hidden="true">${ring(150,'#F07A5A','rEv')}${ring(118,'#7BC59A','rDone')}</svg>
+  <div class="center"><div class="lbl" id="hLbl">Leave in</div><div class="digits" id="hD"></div><div class="sub" id="hSub"></div></div></div>${SHARE}
+  <div class="sec"><h2>Grab in this order</h2><div class="prog"><div class="pb"><b id="pb"></b></div><span id="pt"></span></div><ul class="todo" id="todo"></ul></div>
+  <div class="co" style="border-color:rgba(240,122,90,.6)"><h2 style="color:#F59A80">On the road</h2><ul>
+   <li>Follow the <b>evacuation routes</b>. Don't take shortcuts; they may be blocked.</li>
+   <li><b>Never drive into floodwater.</b> 6 inches of moving water can knock you off your feet, and as little as 12 inches can lift a small car.</li>
+   <li>Watch for washed-out roads and <b>downed power lines</b>.</li>
+   <li>Shut off water, gas or electricity <b>only if your home is damaged and officials tell you to.</b></li></ul></div>
+  <div class="share"><button type="button" id="plus5">+5 minutes</button><button type="button" id="shareBtn">Share with family</button></div>`;
+ const ul=$('#todo');const draw=()=>{todo(ul,EV,E.done||(E.done={}),true);prog()};const prog=()=>{const n=EV.filter(x=>E.done[x[1]]).length;$('#pb').style.width=n/EV.length*100+'%';$('#pt').textContent=`${n} of ${EV.length}`;setRing('rDone',n/EV.length)};
+ ul.addEventListener('change',prog);draw();
+ $('#plus5').onclick=()=>{E.end=Math.max(E.end,Date.now())+5*M;E.mins+=5;save()};
+ TICK=()=>{const l=E.end-Date.now();const tot=E.mins*M;setRing('rEv',1-l/tot,l<=0?'#E5604D':'#F07A5A');
+  if(l>0){$('#hLbl').textContent='Leave in';$('#hD').textContent=l>=H?hms(l):ms_(l);$('#hSub').textContent='by '+fmtTime(E.end);$('#hD').classList.toggle('pulse',l<60e3)}
+  else{$('#hLbl').textContent='Time to go';$('#hD').textContent='0:00';$('#hSub').textContent='Leave now. Things can be replaced.';$('#hD').classList.add('pulse')}
+  document.title=(l>0?`Leave in ${ms_(l)}`:'Time to go')+' | Hour Zero Clock';};
+ shareLink=()=>{const u=base();u.searchParams.set('s','evac');u.searchParams.set('end',new Date(E.end).toISOString());u.searchParams.set('m',E.mins);return u};shareText='We have to leave. Here is our countdown and grab list.';
+}
+
+// ---------- WATER ----------
+function water(){const W=S.water;
+ if(!W.since){$('#app').innerHTML=`<section><h1 class="q">When did your water stop?</h1><p class="hint">We'll work out how long your stored water lasts at 1 gallon per person, per day.</p>
+  <div class="chips" id="quick">${[['Just now',0],['1 hour ago',60],['6 hours ago',360],['Yesterday',1440]].map(([l,m])=>`<button class="chip" type="button" data-ago="${m}">${l}</button>`).join('')}</div>
+  <div class="row"><span>People at home</span><div class="step"><button type="button" data-d="-1" data-k="people" aria-label="Fewer people">−</button><output id="o_people">${W.people}</output><button type="button" data-d="1" data-k="people" aria-label="More people">+</button></div></div>
+  <div class="row"><span>Gallons of water you have</span><div class="step"><button type="button" data-d="-1" data-k="gal" aria-label="Less water">−</button><output id="o_gal">${W.gal}</output><button type="button" data-d="1" data-k="gal" aria-label="More water">+</button></div></div>
+  <button class="go" id="start" type="button" disabled>Start the timer</button></section>`;let pick=null;
+  $$('#quick .chip').forEach(b=>b.onclick=()=>{$$('#quick .chip').forEach(x=>x.setAttribute('aria-pressed',x===b));pick=Date.now()-(+b.dataset.ago)*M;$('#start').disabled=false});
+  steppers(W);$('#start').onclick=()=>{W.since=pick;save();route()};return;}
+ $('#app').innerHTML=`<div class="ringbox" id="rb"><svg viewBox="-170 -170 340 340" aria-hidden="true">${ring(150,'#8EC5E8','rW')}</svg>
+  <div class="center"><div class="lbl" id="hLbl">Your water lasts</div><div class="digits" id="hD"></div><div class="sub" id="hSub"></div></div></div>
+  <div class="meta"><span>Off for <b id="elapsed"></b></span><span><b id="mp"></b></span></div>${SHARE}
+  <div class="calc" style="margin-bottom:24px"><div class="row"><span>People at home</span><div class="step"><button type="button" data-d="-1" data-k="people" aria-label="Fewer people">−</button><output id="o_people">${W.people}</output><button type="button" data-d="1" data-k="people" aria-label="More people">+</button></div></div>
+   <div class="row" style="margin:0"><span>Gallons you started with</span><div class="step"><button type="button" data-d="-1" data-k="gal" aria-label="Less water">−</button><output id="o_gal">${W.gal}</output><button type="button" data-d="1" data-k="gal" aria-label="More water">+</button></div></div>
+   <p class="small" style="margin:12px 0 0">Plan on <b>1 gallon per person, per day</b> for drinking and hygiene. Hot weather can double what you need (FEMA). Don't ration drinking water unless officials tell you to: drink what you need today and look for more tomorrow.</p></div>
+  <div class="sec"><h2>Water hiding in your home</h2><p class="sub">Treat it before drinking: boil or disinfect (EPA).</p><ul class="todo" id="todo"></ul></div>
+  <details><summary>Never drink from these</summary><div class="dbody"><p style="margin:0">Radiators or boilers from the heating system, waterbeds, floodwater, and the toilet <b>bowl</b>. Pool and spa water is for washing and cleaning only (CDC, FEMA).</p></div></details>
+  <details><summary>How to make water safe</summary><div class="dbody"><p style="margin:0 0 8px"><b>Boil:</b> a rolling boil for 1 minute, or 3 minutes above 6,500 feet (CDC).</p><p style="margin:0"><b>Bleach:</b> 8 drops of 6% unscented bleach per gallon (6 drops of 8.25%), stir and wait 30 minutes (EPA). The Boil water tab has a calculator and timer.</p></div></details>
+  ${SHAREBTN}`;
+ todo($('#todo'),[['<b>Water heater tank.</b> Turn off its power or gas first, then drain from the valve at the bottom. Refill it before turning it back on.','wh'],['<b>Pipes.</b> Open the highest faucet in the house to let air in, then collect from the lowest one.','pipes'],['<b>Ice cubes</b> made from safe water.','ice'],['<b>Toilet tank</b>, not the bowl, if the water is clear and has no cleaner in it.','tank'],['<b>Liquid from canned fruit and vegetables.</b>','cans']],W.done||(W.done={}));
+ steppers(W);
+ TICK=()=>{const now=Date.now(),el=now-W.since,dur=W.gal/Math.max(1,W.people)*24*H,l=dur-el;$('#elapsed').textContent=hms(el);$('#mp').textContent=`${W.gal} gal ÷ ${W.people} ${W.people>1?'people':'person'} = ${(W.gal/W.people).toFixed(1)} days`;
+  setRing('rW',el/dur,l<=0?'#E5604D':'#8EC5E8');
+  if(l>0){$('#hLbl').textContent='Your water lasts';$('#hD').innerHTML=l>=48*H?`${Math.floor(l/(24*H))}<small>d</small> ${hms(l%(24*H))}`:hms(l);$('#hSub').textContent='until '+fmtTime(W.since+dur)}
+  else{$('#hLbl').textContent='Your stored water ran out';$('#hD').textContent='0:00:00';$('#hSub').textContent='Check the hidden water below';$('#hD').classList.add('pulse')}
+  document.title=(l>0?`Water ${hms(l)}`:'Water ran out')+' | Hour Zero Clock';};
+ shareLink=()=>{const u=base();u.searchParams.set('s','water');u.searchParams.set('since',new Date(W.since).toISOString());u.searchParams.set('p',W.people);u.searchParams.set('g',W.gal);return u};shareText='Our water is off. This shows how long our stored water lasts.';
+}
+function steppers(W){$$('.step button').forEach(b=>b.onclick=()=>{const k=b.dataset.k;W[k]=Math.max(1,Math.min(k==='gal'?200:12,(W[k]||1)+(+b.dataset.d)));$('#o_'+k).textContent=W[k];save();if(TICK)TICK()})}
+
+// ---------- common ----------
+function segs(sel,cb){$$(sel+' button').forEach(b=>b.addEventListener('click',()=>{$$(sel+' button').forEach(x=>x.setAttribute('aria-pressed',String(x===b)));cb(b.dataset.v)}))}
+let TICK=null, shareLink=null, shareText='';
+const base=()=>new URL(location.href.split('?')[0]);
+function route(){TICK=null;shareLink=null;window.scrollTo(0,0);
+ if(!S.scn){$('#switch').classList.add('hide');$('#reset').classList.add('hide');home();return}
+ switcher();setScene(S.scn);({power,boil,evac,water})[S.scn]();
+ const started=(S.scn==='power'&&S.power.since)||(S.scn==='evac'&&S.evac.end)||(S.scn==='water'&&S.water.since)||S.scn==='boil';$('#reset').classList.toggle('hide',!started);
+ wire();if(TICK)TICK();}
+function wire(){const sb=$('#shareBtn'),cb=$('#copyBtn'),wk=$('#wake');
+ if(sb)sb.onclick=async()=>{const url=shareLink?shareLink().toString():location.href;if(navigator.share){try{await navigator.share({title:'Hour Zero Clock',text:shareText,url})}catch(e){}}else copy(url)};
+ if(cb)cb.onclick=()=>copy(shareLink?shareLink().toString():location.href);
+ if(wk){if(!('wakeLock' in navigator))$('#wakeRow').classList.add('hide');wk.setAttribute('aria-checked',String(!!lock));wk.onclick=async()=>{if(lock){lock.release();lock=null;wk.setAttribute('aria-checked','false');return}try{lock=await navigator.wakeLock.request('screen');wk.setAttribute('aria-checked','true');lock.addEventListener('release',()=>{lock=null;const w=$('#wake');if(w)w.setAttribute('aria-checked','false')})}catch(e){toast('Your browser won\'t keep the screen on.')}}}}
+let lock=null;
+async function copy(t){try{await navigator.clipboard.writeText(t);toast('Link copied')}catch(e){prompt('Copy this link:',t)}}
+$('#home').onclick=()=>{S.scn=null;save();history.replaceState(null,'',location.pathname);route()};
+$('#reset').onclick=()=>{const k=S.scn;if(k==='power')S.power={};if(k==='evac')S.evac={};if(k==='water')S.water={people:S.water.people||2,gal:S.water.gal||6};if(k==='boil'){delete S.boil.boilEnd;delete S.boil.bleachEnd}save();history.replaceState(null,'',location.pathname);route()};
+document.addEventListener('visibilitychange',async()=>{if(document.visibilityState==='visible'){if(TICK)TICK();const w=$('#wake');if(w&&w.getAttribute('aria-checked')==='true'&&!lock){try{lock=await navigator.wakeLock.request('screen')}catch(e){}}}});
+setInterval(()=>{if(TICK)TICK()},250);
+
+// ---------- ambient sky ----------
+const cv=$('#sky'),cx=cv.getContext('2d');let FX=null,parts=[];const RM=matchMedia('(prefers-reduced-motion: reduce)').matches;
+function setScene(k){const ac=k?SC[k].ac:'#F2B04A';document.documentElement.style.setProperty('--ac',ac);FX=k?SC[k].fx:'snow';parts=[];}
+function resize(){cv.width=innerWidth*devicePixelRatio;cv.height=innerHeight*devicePixelRatio}addEventListener('resize',resize);resize();
+let lt=performance.now();
+function frame(t){const dt=Math.min(.05,(t-lt)/1000);lt=t;const w=cv.width,h=cv.height,d=devicePixelRatio;cx.clearRect(0,0,w,h);
+ if(!RM&&FX){
+  if(FX==='snow'){while(parts.length<70)parts.push({x:Math.random()*w,y:Math.random()*h,r:(Math.random()*1.6+.6)*d,v:(Math.random()*18+10)*d,ph:Math.random()*6});
+   cx.fillStyle='rgba(236,230,218,.35)';parts.forEach(p=>{p.y+=p.v*dt;p.x+=Math.sin(t/1400+p.ph)*.3*d;if(p.y>h){p.y=-5;p.x=Math.random()*w}cx.beginPath();cx.arc(p.x,p.y,p.r,0,7);cx.fill()})}
+  if(FX==='steam'){while(parts.length<26)parts.push({x:Math.random()*w,y:h+Math.random()*h*.5,r:(Math.random()*40+30)*d,v:(Math.random()*20+14)*d,ph:Math.random()*6});
+   parts.forEach(p=>{p.y-=p.v*dt;p.x+=Math.sin(t/1800+p.ph)*.4*d;if(p.y<-p.r){p.y=h+p.r;p.x=Math.random()*w}const g=cx.createRadialGradient(p.x,p.y,0,p.x,p.y,p.r);g.addColorStop(0,'rgba(111,211,193,.06)');g.addColorStop(1,'rgba(111,211,193,0)');cx.fillStyle=g;cx.beginPath();cx.arc(p.x,p.y,p.r,0,7);cx.fill()})}
+  if(FX==='beacon'){const a=(t/1000)*1.2;const x=w/2,y=-h*.1;const g=cx.createRadialGradient(x,y,0,x,y,h*1.1);g.addColorStop(0,'rgba(240,122,90,.10)');g.addColorStop(1,'rgba(240,122,90,0)');cx.save();cx.translate(x,y);cx.rotate(Math.sin(a)*.6);cx.fillStyle=g;cx.beginPath();cx.moveTo(0,0);cx.lineTo(-w*.35,h*1.2);cx.lineTo(w*.35,h*1.2);cx.closePath();cx.fill();cx.restore()}
+  if(FX==='drops'){while(parts.length<40)parts.push({x:Math.random()*w,y:Math.random()*h,l:(Math.random()*10+8)*d,v:(Math.random()*120+160)*d});
+   cx.strokeStyle='rgba(142,197,232,.22)';cx.lineWidth=1.2*d;parts.forEach(p=>{p.y+=p.v*dt;if(p.y>h){p.y=-p.l;p.x=Math.random()*w}cx.beginPath();cx.moveTo(p.x,p.y);cx.lineTo(p.x,p.y+p.l);cx.stroke()})}
+ }
+ requestAnimationFrame(frame)}
+requestAnimationFrame(frame);
+route();
+})();
+</script>
+</body>
+</html>
