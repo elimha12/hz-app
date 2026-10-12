@@ -1,0 +1,360 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Emergency Kit Builder: A Printable 72-Hour Kit List for Your Family | Hour Zero Ready</title>
+<meta name="description" content="Tap in who lives in your home, kids, babies, older adults and pets, and get a printable emergency kit list with the right amount of water and food. Based on FEMA's Ready.gov, the American Red Cross and the CDC.">
+<link rel="canonical" href="https://elimha12.github.io/hz-app/kit-builder.html">
+<meta property="og:title" content="Build your family's emergency kit in 2 minutes">
+<meta property="og:description" content="How much water, how much food, and what each person needs. Printable and free.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://elimha12.github.io/hz-app/kit-builder.html">
+<meta name="theme-color" content="#0D1220">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600;700;800&family=Oswald:wght@500;600;700&display=swap" rel="stylesheet">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"Emergency Kit Builder","applicationCategory":"UtilitiesApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"description":"A printable emergency kit list sized to your household, based on FEMA's Ready.gov, the American Red Cross and the CDC.","publisher":{"@type":"Organization","name":"Hour Zero Ready"}}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"How much water should be in an emergency kit?","acceptedAnswer":{"@type":"Answer","text":"At least 1 gallon per person per day (FEMA, Ready.gov). The American Red Cross suggests a 3-day supply for evacuation and a 2-week supply for home."}},
+{"@type":"Question","name":"How many days should an emergency kit last?","acceptedAnswer":{"@type":"Answer","text":"At least 3 days for a kit you take when you evacuate, and 2 weeks of supplies for staying home (American Red Cross)."}},
+{"@type":"Question","name":"How often should I check my emergency kit?","acceptedAnswer":{"@type":"Answer","text":"Check your needs every six months and update the kit as your family's needs change (FEMA, Are You Ready?)."}}]}
+</script>
+<style>
+:root{--ink:#0D1220;--panel:#141B2D;--panel2:#19223A;--line:#26314D;--cream:#ECE6DA;--mute:#98A1B6;--lamp:#F2B04A;--frost:#8EC5E8;--alert:#E5604D;--ok:#7BC59A;--r:18px}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--ink);color:var(--cream);font:17px/1.55 "Inter Tight",system-ui,-apple-system,"Segoe UI",sans-serif;-webkit-font-smoothing:antialiased}
+a{color:var(--lamp)}
+button{font:inherit;color:inherit}
+:focus-visible{outline:3px solid var(--lamp);outline-offset:3px;border-radius:8px}
+.bg{position:fixed;inset:0;pointer-events:none;background:radial-gradient(70vmax 50vmax at 50% -15%,rgba(242,176,74,.13),transparent 60%),radial-gradient(50vmax 40vmax at 110% 110%,rgba(142,197,232,.07),transparent 60%)}
+.wrap{max-width:640px;margin:0 auto;padding:24px 18px 64px;position:relative}
+header{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}
+.brand{font-family:Oswald,sans-serif;font-weight:600;font-size:28px;line-height:1}
+.brand small{display:block;font-family:"Inter Tight";font-weight:500;font-size:13px;color:var(--mute);margin-top:5px}
+.brand a{color:inherit;text-decoration:none}
+.navl{font-size:14px;color:var(--mute);text-decoration:none;border:1px solid var(--line);border-radius:999px;padding:7px 14px}
+h1{font-family:Oswald,sans-serif;font-weight:600;font-size:clamp(34px,8.6vw,50px);line-height:1.04;margin:6px 0 10px}
+.lede{color:var(--mute);margin:0 0 20px}
+h2{font-family:Oswald,sans-serif;font-weight:600;font-size:26px;margin:0 0 4px}
+.sub{color:var(--mute);font-size:15px;margin:0 0 14px}
+/* stage */
+.stage{position:relative;height:150px;border-radius:22px;background:linear-gradient(180deg,#121A2E,#182239);border:1px solid var(--line);overflow:hidden;margin-bottom:14px}
+.stage::after{content:"";position:absolute;left:0;right:0;bottom:0;height:26px;background:#1E2943;border-top:1px solid #2A3757}
+.line{position:absolute;left:0;right:0;bottom:22px;display:flex;justify-content:center;align-items:flex-end;gap:2px;padding:0 10px;z-index:1;flex-wrap:nowrap}
+.line svg{flex:none;animation:pop .35s cubic-bezier(.3,1.6,.5,1) both;transform-origin:bottom center}
+@keyframes pop{from{transform:scale(.2);opacity:0}}
+.stage .cnt{position:absolute;left:16px;top:12px;font-size:14px;color:var(--mute)}
+.stage .cnt b{color:var(--cream)}
+.empty{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:var(--mute);font-size:15px}
+/* members */
+.members{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:26px}
+.mem{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:12px 8px 10px;text-align:center;transition:border-color .2s}
+.mem.on{border-color:rgba(242,176,74,.55)}
+.mem .av{height:58px;display:flex;align-items:flex-end;justify-content:center}
+.mem b{display:block;font-size:15px;margin-top:6px;line-height:1.2}
+.mem i{display:block;font-style:normal;font-size:12px;color:var(--mute);margin-bottom:8px}
+.step{display:flex;align-items:center;justify-content:space-between;background:var(--panel2);border-radius:999px;border:1px solid var(--line)}
+.step button{background:none;border:0;width:36px;height:36px;font-size:20px;cursor:pointer;line-height:1}
+.step button:disabled{opacity:.3}
+.step output{font-weight:800;font-family:Oswald;font-size:19px}
+.seg{display:flex;background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:5px;margin-bottom:22px;gap:5px}
+.seg button{flex:1;background:none;border:0;border-radius:12px;padding:10px 8px;cursor:pointer;text-align:center;color:var(--mute);line-height:1.25}
+.seg button b{display:block;font-size:16px;color:inherit}
+.seg button span{font-size:13px}
+.seg button[aria-pressed="true"]{background:var(--cream);color:var(--ink)}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:30px}
+.chip{background:var(--panel);border:1px solid var(--line);border-radius:999px;padding:9px 14px;font-weight:600;font-size:15px;cursor:pointer;display:flex;align-items:center;gap:8px}
+.chip::before{content:"";width:16px;height:16px;border-radius:5px;border:2px solid var(--mute);flex:none}
+.chip[aria-pressed="true"]{border-color:var(--lamp);background:rgba(242,176,74,.12)}
+.chip[aria-pressed="true"]::before{background:var(--lamp);border-color:var(--lamp);box-shadow:inset 0 0 0 2px var(--panel)}
+/* totals */
+.totals{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:12px}
+.tot{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:14px 12px}
+.tot .k{font-size:13px;color:var(--mute)}
+.tot .v{font-family:Oswald;font-weight:600;font-size:34px;line-height:1.05;font-variant-numeric:tabular-nums}
+.tot .u{font-size:13px;color:var(--mute);line-height:1.3}
+.tot.w .v{color:var(--frost)}.tot.f .v{color:var(--lamp)}
+.jugs{display:flex;flex-wrap:wrap;gap:3px;margin:0 0 6px}
+.jugs svg{width:15px;height:20px}
+.note{font-size:14px;color:var(--mute);margin:0 0 26px}
+/* pack */
+.packrow{display:grid;grid-template-columns:120px 1fr;gap:18px;align-items:center;background:linear-gradient(135deg,#1A2542,#141B2D);border:1px solid var(--line);border-radius:22px;padding:16px 18px;margin-bottom:22px;position:sticky;top:8px;z-index:3;box-shadow:0 10px 30px rgba(0,0,0,.35)}
+.packrow svg{width:120px;height:120px}
+.packrow .pct{font-family:Oswald;font-weight:600;font-size:40px;line-height:1}
+.packrow .pl{color:var(--mute);font-size:14px}
+.packrow .bar{height:8px;background:var(--line);border-radius:8px;overflow:hidden;margin-top:10px}
+.packrow .bar b{display:block;height:100%;background:var(--ok);transition:width .35s}
+.cat{margin-bottom:18px}
+.cat h3{font-family:Oswald;font-weight:600;font-size:20px;margin:0 0 8px;display:flex;justify-content:space-between;align-items:baseline;gap:10px}
+.cat h3 small{font-family:"Inter Tight";font-size:13px;color:var(--mute);font-weight:600}
+.cat h3 .tag{font-family:"Inter Tight";font-size:12px;font-weight:700;color:var(--ink);background:var(--lamp);border-radius:999px;padding:2px 9px;margin-left:8px;vertical-align:middle}
+.todo{list-style:none;margin:0;padding:0;display:grid;gap:6px}
+.todo li{display:flex;gap:12px;align-items:flex-start;background:var(--panel);border-radius:13px;padding:11px 14px;cursor:pointer;user-select:none;transition:opacity .2s,background .2s}
+.todo .box{flex:none;width:22px;height:22px;border:2px solid var(--mute);border-radius:6px;margin-top:2px;display:flex;align-items:center;justify-content:center}
+.todo li.done{opacity:.5}
+.todo li.done .box{background:var(--ok);border-color:var(--ok)}
+.todo li.done .box::after{content:"";width:5px;height:10px;border:solid #0D1220;border-width:0 3px 3px 0;transform:rotate(45deg) translate(-1px,-1px)}
+.todo .q{margin-left:auto;flex:none;font-family:Oswald;font-weight:600;color:var(--lamp);font-size:17px;padding-left:8px}
+.todo .t small{display:block;color:var(--mute);font-size:13px;line-height:1.35;margin-top:2px}
+.acts{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:24px 0 28px}
+.acts button{background:var(--panel2);border:1px solid var(--line);border-radius:14px;padding:13px 10px;font-weight:700;cursor:pointer}
+.acts .pri{grid-column:1 / -1;background:var(--lamp);border-color:var(--lamp);color:#1B1305;font-size:18px;padding:15px}
+.book{display:grid;grid-template-columns:auto 1fr;gap:18px;align-items:center;background:linear-gradient(135deg,#1A2542,#141B2D);border:1px solid var(--line);border-radius:22px;padding:20px;margin:8px 0 24px}
+.book .cv{width:74px;height:110px;border-radius:4px;background:#0E1A30;box-shadow:0 10px 24px rgba(0,0,0,.45);display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;font-family:Oswald;line-height:1;padding:6px;border:1px solid #22304F}
+.book .cv b{font-size:17px}.book .cv i{font-style:normal;font-size:11px;color:var(--lamp);margin-top:3px}
+.book p{margin:0 0 10px;font-size:15px;color:#D7D1C5}
+.book a.btn{display:inline-block;background:var(--lamp);color:#1B1305;text-decoration:none;font-weight:800;border-radius:12px;padding:10px 16px;font-size:15px;margin:4px 8px 0 0}
+.book a.lnk{font-size:15px}
+.more{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:24px}
+.more a{flex:1;min-width:200px;text-decoration:none;color:var(--cream);background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:14px 16px;font-weight:700}
+.more a span{display:block;color:var(--mute);font-weight:500;font-size:14px}
+footer{color:var(--mute);font-size:13px;border-top:1px solid var(--line);padding-top:16px}
+footer p{margin:0 0 8px}
+.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%) translateY(80px);opacity:0;visibility:hidden;background:var(--cream);color:var(--ink);padding:10px 18px;border-radius:999px;font-weight:700;transition:transform .25s,opacity .25s;z-index:9}
+.toast.on{transform:translateX(-50%);opacity:1;visibility:visible}
+.printonly{display:none}
+@media (max-width:420px){.members{gap:8px}.mem b{font-size:14px}.totals{gap:8px}.tot{padding:12px 10px}.tot .v{font-size:28px}.packrow{grid-template-columns:90px 1fr;gap:12px}.packrow svg{width:90px;height:90px}.packrow .pct{font-size:32px}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+/* PRINT */
+@media print{
+ @page{size:letter;margin:.5in}
+ body{background:#fff;color:#000;font-size:10.5pt;line-height:1.35}
+ .bg,header,.stage,.members,.seg,.chips,.packrow,.acts,.book,.more,footer,.toast,.screen,.jugs{display:none!important}
+ .wrap{max-width:none;padding:0}
+ .printonly{display:block}
+ .ph{display:flex;justify-content:space-between;align-items:flex-end;border-bottom:2px solid #000;padding-bottom:6px;margin-bottom:10px}
+ .ph h1{font-size:22pt;margin:0;color:#000}
+ .ph div{font-size:9.5pt;text-align:right}
+ .totals{grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:6px}
+ .tot{border:1.5px solid #000;border-radius:6px;padding:6px 8px;background:#fff}
+ .tot .k,.tot .u{color:#000}.tot .v{color:#000!important;font-size:20pt}
+ .note{color:#000;font-size:9pt;margin-bottom:10px}
+ #list{columns:2;column-gap:22px}
+ .cat{break-inside:avoid;margin-bottom:10px}
+ .cat h3{font-size:12.5pt;border-bottom:1px solid #000;margin-bottom:4px;color:#000}
+ .cat h3 small{display:none}
+ .cat h3 .tag{background:none;color:#000;border:1px solid #000}
+ .todo{gap:0}
+ .todo li{background:none;padding:2px 0;opacity:1!important;break-inside:avoid}
+ .todo .box{width:12px;height:12px;border:1.5px solid #000;border-radius:2px;background:#fff!important}
+ .todo li.done .box::after{border-color:#000}
+ .todo .q{color:#000;font-size:11pt}
+ .todo .t small{color:#333;font-size:8.5pt}
+ .pf{display:block;margin-top:10px;border-top:1px solid #000;padding-top:6px;font-size:8.5pt}
+}
+</style>
+</head>
+<body>
+<div class="bg"></div>
+<div class="wrap">
+ <header><div class="brand"><a href="./">Kit Builder</a><small>by Hour Zero Ready</small></div><a class="navl" href="hour-zero-clock.html">Emergency timers</a></header>
+
+ <div class="printonly ph"><h1>Our Emergency Kit</h1><div id="phMeta"></div></div>
+
+ <section class="screen">
+  <h1>Build your family's emergency kit</h1>
+  <p class="lede">Tap in who lives in your home. You'll get the water, food and supplies your kit needs, sized to your family. Print it and check things off.</p>
+  <div class="stage" aria-hidden="true"><div class="cnt" id="cnt"></div><div class="line" id="line"></div><div class="empty hide" id="empty">Add someone below</div></div>
+  <div class="members" id="members"></div>
+
+  <h2>What kind of kit?</h2>
+  <p class="sub">The Red Cross suggests 3 days of supplies to take with you, and 2 weeks for staying home.</p>
+  <div class="seg" id="days"><button type="button" data-v="3"><b>Go-bag</b><span>3 days, to carry out</span></button><button type="button" data-v="14"><b>Home supply</b><span>2 weeks, to stay put</span></button></div>
+
+  <h2>Anything else about your home?</h2>
+  <p class="sub">Tap all that fit. Your list updates as you go.</p>
+  <div class="chips" id="flags"></div>
+ </section>
+
+ <h2 class="screen">Your kit</h2>
+ <div class="totals" id="totals"></div>
+ <div class="jugs" id="jugs" aria-hidden="true"></div>
+ <p class="note" id="note"></p>
+
+ <div class="packrow screen"><svg viewBox="0 0 120 120" aria-hidden="true">
+   <defs><clipPath id="bagClip"><path d="M30 42c0-10 8-16 18-16h24c10 0 18 6 18 16v58a10 10 0 0 1-10 10H40a10 10 0 0 1-10-10Z"/></clipPath>
+   <linearGradient id="fillG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#F7C979"/><stop offset="1" stop-color="#E39A2E"/></linearGradient></defs>
+   <path d="M46 26v-6a8 8 0 0 1 8-8h12a8 8 0 0 1 8 8v6" fill="none" stroke="#56627F" stroke-width="5" stroke-linecap="round"/>
+   <path d="M30 42c0-10 8-16 18-16h24c10 0 18 6 18 16v58a10 10 0 0 1-10 10H40a10 10 0 0 1-10-10Z" fill="#1E2740"/>
+   <g clip-path="url(#bagClip)"><rect id="fill" x="20" y="110" width="80" height="100" fill="url(#fillG)" style="transition:y .5s cubic-bezier(.3,1.3,.5,1)"/><path id="wave" d="M20 0q10-4 20 0t20 0t20 0t20 0t20 0t20 0v6H20Z" fill="#F7C979" opacity=".7"/></g>
+   <path d="M30 42c0-10 8-16 18-16h24c10 0 18 6 18 16v58a10 10 0 0 1-10 10H40a10 10 0 0 1-10-10Z" fill="none" stroke="#56627F" stroke-width="4"/>
+   <rect x="42" y="62" width="36" height="22" rx="6" fill="none" stroke="#56627F" stroke-width="3"/>
+  </svg>
+  <div><div class="pct" id="pct">0%</div><div class="pl" id="pl"></div><div class="bar"><b id="bar"></b></div></div></div>
+
+ <div id="list"></div>
+ <div class="printonly pf" id="pf"></div>
+
+ <div class="acts"><button class="pri" type="button" id="print">Print my list</button><button type="button" id="ics">Remind me in 6 months</button><button type="button" id="share">Share with family</button></div>
+
+ <aside class="book">
+  <div class="cv"><b>72 HOURS</b><i>TO 6 MONTHS</i></div>
+  <div><p>This list is the starting line. <b>72 Hours to 6 Months</b> walks you from a 3-day kit to a 6-month home supply, room by room, starting with about $100.</p>
+   <a class="btn" href="https://elimdal.gumroad.com/l/zcgejs" target="_blank" rel="noopener">Get the free 60-minute checklist</a>
+   <a class="lnk" href="https://elimdal.gumroad.com/l/yqudvq" target="_blank" rel="noopener">See the full guide</a></div>
+ </aside>
+ <div class="more">
+  <a href="hour-zero-clock.html">Hour Zero Clock<span>Timers for power outages, boil-water notices and evacuations</span></a>
+  <a href="score.html">How ready is your home?<span>The 2-minute readiness test</span></a>
+ </div>
+ <footer>
+  <p>Sources: FEMA, Ready.gov (Build a Kit, Water, Food, Evacuation, Pets, People with Disabilities) and <i>Are You Ready?</i>; American Red Cross (Survival Kit); CDC (infant feeding in emergencies, winter weather, pet emergency checklist).</p>
+  <p>Food calories use 2,000 per person per day as a shopping number. Real needs vary with age, size and activity; ask a doctor or dietitian about medical diets. Pet water uses 1 gallon per pet per day as a planning figure; your pet may need less, so ask your vet.</p>
+  <p>Your list is saved only in this browser. Nothing you enter leaves your device.</p>
+ </footer>
+</div>
+<div class="toast" id="toast" role="status"></div>
+
+<script>
+(function(){
+const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
+const store={get(k){try{return localStorage.getItem(k)}catch(e){return null}},set(k,v){try{localStorage.setItem(k,v)}catch(e){}}};
+function toast(t){const e=$('#toast');e.textContent=t;e.classList.add('on');clearTimeout(e._t);e._t=setTimeout(()=>e.classList.remove('on'),2200)}
+
+/* ---------- avatars ---------- */
+const SK=['#E8B48A','#C98E62','#9C6A45','#F1C7A1'];
+function person(kind,i){const s=SK[i%SK.length];
+ if(kind==='ad'){const shirt=['#F2B04A','#8EC5E8','#E5604D','#7BC59A'][i%4];return `<svg width="34" height="92" viewBox="0 0 34 92"><circle cx="17" cy="13" r="10" fill="${s}"/><path d="M8 8a10 10 0 0 1 18 0c-3-2-12-2-18 0Z" fill="#3A2A20"/><rect x="5" y="25" width="24" height="36" rx="10" fill="${shirt}"/><rect x="8" y="56" width="8" height="34" rx="4" fill="#33405F"/><rect x="18" y="56" width="8" height="34" rx="4" fill="#33405F"/></svg>`}
+ if(kind==='old'){return `<svg width="42" height="88" viewBox="0 0 42 88"><circle cx="17" cy="13" r="10" fill="${s}"/><path d="M7 11a10 10 0 0 1 20 0c-4-4-16-4-20 0Z" fill="#D8D8D8"/><circle cx="13" cy="14" r="3.2" fill="none" stroke="#0D1220" stroke-width="1.4"/><circle cx="21" cy="14" r="3.2" fill="none" stroke="#0D1220" stroke-width="1.4"/><rect x="5" y="25" width="24" height="34" rx="10" fill="#B79BE0"/><rect x="8" y="54" width="8" height="32" rx="4" fill="#4A4F66"/><rect x="18" y="54" width="8" height="32" rx="4" fill="#4A4F66"/><path d="M34 44v42M34 44q0-5 4-5" stroke="#C99A62" stroke-width="3" fill="none" stroke-linecap="round"/></svg>`}
+ if(kind==='kid'){const shirt=['#7BC59A','#F07A5A','#6FD3C1','#F2B04A'][i%4];return `<svg width="28" height="64" viewBox="0 0 28 64"><circle cx="14" cy="11" r="9" fill="${s}"/><path d="M5 9a9 9 0 0 1 18 0l-2-1-3 2-4-3-4 3-3-2Z" fill="#5A3A22"/><rect x="4" y="21" width="20" height="24" rx="8" fill="${shirt}"/><rect x="6" y="41" width="7" height="22" rx="3.5" fill="#33405F"/><rect x="15" y="41" width="7" height="22" rx="3.5" fill="#33405F"/></svg>`}
+ if(kind==='baby'){return `<svg width="34" height="38" viewBox="0 0 34 38"><ellipse cx="17" cy="28" rx="15" ry="10" fill="#F4EDE1"/><circle cx="17" cy="14" r="10" fill="${s}"/><path d="M15 4q2 3 4 0" stroke="#5A3A22" stroke-width="2" fill="none"/><circle cx="13.5" cy="14" r="1.3" fill="#0D1220"/><circle cx="20.5" cy="14" r="1.3" fill="#0D1220"/></svg>`}
+ if(kind==='dog'){return `<svg width="50" height="40" viewBox="0 0 50 40"><rect x="8" y="14" width="30" height="14" rx="7" fill="#C98E4A"/><rect x="10" y="24" width="5" height="15" rx="2.5" fill="#C98E4A"/><rect x="31" y="24" width="5" height="15" rx="2.5" fill="#C98E4A"/><circle cx="40" cy="12" r="8" fill="#C98E4A"/><path d="M36 6q-4 6 0 11" fill="#8E5E2A"/><rect x="44" y="12" width="6" height="5" rx="2.5" fill="#C98E4A"/><circle cx="42" cy="10" r="1.4" fill="#0D1220"/><path d="M8 18q-6-8-4-12" stroke="#C98E4A" stroke-width="4" fill="none" stroke-linecap="round"/><rect x="33" y="17" width="9" height="3" rx="1.5" fill="#E5604D"/></svg>`}
+ if(kind==='cat'){return `<svg width="40" height="40" viewBox="0 0 40 40"><path d="M6 38q-2-18 12-20h4q10 2 8 20Z" fill="#8A93A8"/><circle cx="22" cy="13" r="9" fill="#8A93A8"/><path d="M14 8l1-8 6 5ZM30 8l-1-8-6 5Z" fill="#8A93A8"/><circle cx="19" cy="13" r="1.4" fill="#0D1220"/><circle cx="25" cy="13" r="1.4" fill="#0D1220"/><path d="M30 36q10-2 6-14" stroke="#8A93A8" stroke-width="4" fill="none" stroke-linecap="round"/></svg>`}}
+const MEM=[['ad','Adult','18 to 64'],['old','Older adult','65 and up'],['kid','Child','1 to 17'],['baby','Baby','under 1'],['dog','Dog',''],['cat','Cat','or other pet']];
+const FLAGS=[['meds','Someone takes daily prescriptions'],['eyes','Glasses or contacts'],['hear','Hearing aids'],['power','Medical device that needs power'],['diab','Diabetes'],['cold','Cold winters'],['hot','Hot summers'],['car','We have a car']];
+
+/* ---------- state ---------- */
+let K={ad:2,old:0,kid:0,baby:0,dog:0,cat:0,days:3,f:{},done:{}};
+try{const j=JSON.parse(store.get('kit')||'null');if(j)K=Object.assign(K,j)}catch(e){}
+const qp=new URLSearchParams(location.search);
+if(qp.get('h')){const a=qp.get('h').split('.').map(Number);['ad','old','kid','baby','dog','cat'].forEach((k,i)=>{if(!isNaN(a[i]))K[k]=Math.max(0,Math.min(12,a[i]))});if(a[6]===14||a[6]===3)K.days=a[6];K.f={};(qp.get('f')||'').split(',').forEach(x=>{if(FLAGS.some(f=>f[0]===x))K.f[x]=true});}
+const save=()=>store.set('kit',JSON.stringify(K));
+
+/* ---------- items ---------- */
+function build(){
+ const P=K.ad+K.old+K.kid+K.baby, pets=K.dog+K.cat, D=K.days, f=K.f, eaters=K.ad+K.old+K.kid;
+ const water=(P+pets)*D, cal=eaters*2000*D;
+ const L=[];
+ const C=(id,title,tag,items)=>{items=items.filter(Boolean);if(items.length)L.push({id,title,tag,items})};
+ C('wf','Water and food','',[
+  ['water',`Water: ${water} gallons`,`1 gallon per person, per day${pets?', counting each pet the same':''}. Sealed, store-bought bottled water is the safest choice.`,water+' gal'],
+  eaters&&['food',`${D===3?'3-day':'2-week'} supply of food`,`Foods that need no fridge, cooking or water: canned meat, fruit and vegetables, protein bars, peanut butter, dry cereal, dried fruit. About ${cal.toLocaleString('en-US')} calories in all.`],
+  ['opener','Manual can opener',''],
+  ['mess','Paper plates, cups, plastic utensils and paper towels','']]);
+ C('lp','Light, power and news','',[
+  ['radio','Battery-powered or hand-crank radio','A NOAA Weather Radio with tone alert is best.'],
+  ['flash','Flashlights','Use these, not candles.'],
+  ['batt','Extra batteries','For the radio and flashlights.'],
+  ['phone','Phone chargers and a backup battery','']]);
+ C('tl','Tools and safety','',[
+  ['whistle','Whistle','To signal for help.'],
+  ['mask','Dust masks',''],
+  ['sheet','Plastic sheeting, scissors and duct tape',''],
+  ['wrench','Wrench or pliers','To turn off utilities if officials tell you to.'],
+  ['multi','Multi-purpose tool',''],
+  D===14&&['ext','Fire extinguisher',''],
+  ['matches','Matches in a waterproof container',''],
+  ['maps','Paper maps of your area','']]);
+ C('fa','First aid and medicine','',[
+  ['fak','First aid kit',''],
+  f.meds&&['rx','Prescription medicines, 7-day supply','Keep a written list of each medicine and dose.'],
+  ['otc','Pain relievers, anti-diarrhea medicine, antacids, laxatives',''],
+  f.eyes&&['eyes','Spare glasses and contact lens solution',''],
+  f.hear&&['hear','Hearing aids and extra batteries',''],
+  f.diab&&['diab','Diabetes supplies for 1 to 2 weeks','Insulin and syringes, meter and extra batteries, test strips, lancets, glucose tablets, and a container for used needles (CDC).'],
+  f.power&&['power','A plan for your powered medical device','Ask your doctor how to keep it running in an outage, and ask your power company about a priority restoration list.'],
+  (K.old||f.power||f.diab)&&['tag','Medical alert tag or bracelet','For anyone with medical or access needs.']]);
+ C('hy','Hygiene and sanitation','',[
+  ['tow','Moist towelettes, garbage bags and plastic ties',''],
+  ['soap','Soap, hand sanitizer (at least 60% alcohol) and disinfecting wipes',''],
+  ['tp','Toilet paper',''],
+  ['fem','Feminine supplies and personal hygiene items','']]);
+ C('cl','Warmth and clothing','',[
+  P&&['bed','Sleeping bag or warm blanket for each person',f.cold?'Pack extra bedding for cold weather.':'',P+''],
+  P&&['clothes','A complete change of clothes for each person','Long-sleeved shirt, long pants and sturdy shoes.',P+''],
+  ['emb','Emergency blanket','']]);
+ C('dc','Documents and cash','',[
+  ['cash','Cash in small bills','ATMs and card readers may not work.'],
+  ['docs','Copies of IDs, insurance policies and bank records','In a waterproof container, or saved securely online.'],
+  ['contacts','Family and emergency phone numbers on paper','Include your out-of-state contact.'],
+  ['keys','Extra set of car and house keys',''],
+  ['paper','Paper and pencil','']]);
+ if(K.baby)C('bb','For the baby',K.baby>1?`×${K.baby}`:'',[
+  ['rtf','Ready-to-feed formula','It needs no water and is sterile. Skip this if you breastfeed only.'],
+  ['bot','Bottles, plus disposable cups','In case bottles can\'t be cleaned.'],
+  ['dia','Diapers, wipes and diaper rash cream',''],
+  f.cold&&['sack','Footed pajamas or a sleep sack','Babies lose body heat fast. No pillows or soft bedding.'],
+  ['bcheck','Check formula dates every month','Replace what\'s expiring soon.']]);
+ if(K.kid)C('kd','For the kids',K.kid>1?`×${K.kid}`:'',[
+  ['games','Books, games or puzzles',''],
+  ['kphoto','A recent photo of each child','Keep it with your family documents.',K.kid+''],
+  ['comfort','A favorite snack or comfort item','']]);
+ if(K.old)C('od','For older adults',K.old>1?`×${K.old}`:'',[
+  !f.meds&&['ormeds','Any daily medicines, 7-day supply',''],
+  ['olist','Medicine list and doctor\'s phone numbers',''],
+  ['ocheck','Ask a neighbor to check in','Older adults are more at risk in extreme cold and heat.']]);
+ if(pets)C('pt','For the pets',pets>1?`×${pets}`:'',[
+  ['pfood','Pet food in an airtight, waterproof container',`${D===3?'Several days\' worth':'2 weeks\' worth'}.`],
+  ['pbowl','Water bowl','Their water is counted in your total above.'],
+  ['pmed','Extra pet medicine',''],
+  ['pcollar','Collar with ID tag, leash or harness, plus spares',''],
+  ['pcarrier','A carrier for each pet','',pets+''],
+  K.cat&&['litter','Litter and litter box',''],
+  ['precords','Vet records, vaccination and microchip info',''],
+  ['pphoto','A photo of you with your pet',''],
+  ['ptoy','A familiar toy, treat or bedding','']]);
+ if(f.car)C('car','In the car','',[
+  ['jump','Jumper cables',''],
+  f.cold&&['sand','Sand or cat litter for traction',''],
+  ['cflash','Flashlight',''],
+  ['cwarm','Warm clothes and blankets',''],
+  ['cwater','Bottled water and snacks that don\'t spoil',''],
+  ['tank','Keep the gas tank full','']]);
+ return {L,water,cal,P,pets};}
+
+/* ---------- render ---------- */
+function members(){$('#members').innerHTML=MEM.map(([k,n,d],i)=>`<div class="mem ${K[k]?'on':''}"><div class="av">${person(k,0).replace(/width="(\d+)" height="(\d+)"/,(m,w,h)=>`width="${Math.round(w*.62)}" height="${Math.round(h*.62)}"`)}</div><b>${n}</b><i>${d||'&nbsp;'}</i><div class="step"><button type="button" data-k="${k}" data-d="-1" aria-label="Fewer ${n}" ${K[k]?'':'disabled'}>−</button><output>${K[k]}</output><button type="button" data-k="${k}" data-d="1" aria-label="More ${n}" ${K[k]>=12?'disabled':''}>+</button></div></div>`).join('');
+ $$('#members [data-k]').forEach(b=>b.onclick=()=>{const k=b.dataset.k;K[k]=Math.max(0,Math.min(12,K[k]+(+b.dataset.d)));save();members();line(+b.dataset.d>0?k:null);list()})}
+function line(added){const order=['ad','old','kid','baby','dog','cat'];let h='',n=0;const tot=order.reduce((a,k)=>a+K[k],0);const sc=tot>9?Math.max(.55,9/tot):1;
+ order.forEach(k=>{for(let i=0;i<K[k];i++){let s=person(k,n);if(sc<1)s=s.replace(/width="(\d+)" height="(\d+)"/,(m,w,hh)=>`width="${Math.round(w*sc)}" height="${Math.round(hh*sc)}"`);
+  if(!(added===k&&i===K[k]-1))s=s.replace('<svg','<svg style="animation:none"');h+=s;n++}});
+ $('#line').innerHTML=h;$('#empty').style.display=tot?'none':'flex';
+ const P=K.ad+K.old+K.kid+K.baby,pets=K.dog+K.cat;$('#cnt').innerHTML=`<b>${P}</b> ${P===1?'person':'people'}${pets?` · <b>${pets}</b> ${pets===1?'pet':'pets'}`:''}`}
+function flags(){$('#flags').innerHTML=FLAGS.map(([k,n])=>`<button type="button" class="chip" data-f="${k}" aria-pressed="${!!K.f[k]}">${n}</button>`).join('');
+ $$('#flags [data-f]').forEach(b=>b.onclick=()=>{K.f[b.dataset.f]=!K.f[b.dataset.f];b.setAttribute('aria-pressed',!!K.f[b.dataset.f]);save();list()});
+ $$('#days button').forEach(b=>{b.setAttribute('aria-pressed',String(+b.dataset.v===K.days));b.onclick=()=>{K.days=+b.dataset.v;save();flags();list()}})}
+function list(){const {L,water,cal,P,pets}=build();
+ $('#totals').innerHTML=`<div class="tot w"><div class="k">Water</div><div class="v">${water}</div><div class="u">gallons${K.f.hot?', up to '+water*2+' in a heat wave':''}</div></div>
+  <div class="tot f"><div class="k">Food</div><div class="v">${cal>=10000?Math.round(cal/1000)+'k':cal.toLocaleString('en-US')}</div><div class="u">calories, for ${K.days} days</div></div>
+  <div class="tot"><div class="k">To pack</div><div class="v">${L.reduce((a,c)=>a+c.items.length,0)}</div><div class="u">items</div></div>`;
+ const jug='<svg viewBox="0 0 15 20"><path d="M5 1h5v3l3 3v11a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V7l3-3Z" fill="#8EC5E8" opacity=".85"/></svg>';
+ $('#jugs').innerHTML=water<=120?jug.repeat(water):'';
+ $('#note').innerHTML=`${K.days===3?'A go-bag is what you can carry if you leave on foot or by bus. Water is heavy, so keep the rest of it next to your bags, ready to load into the car. Make sure everyone knows where the kit is.':'A home supply stays put. Store water and food somewhere cool and dry.'}${K.baby?' Babies are counted for water; formula is listed below.':''}${K.f.hot?' In very hot weather, water needs can double (FEMA).':''}`;
+ const meta=`${P} ${P===1?'person':'people'}${pets?', '+pets+(pets===1?' pet':' pets'):''} · ${K.days===3?'Go-bag, 3 days':'Home supply, 2 weeks'}`;
+ $('#phMeta').innerHTML=`${meta}<br>Made ${new Date().toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'})}`;
+ $('#pf').innerHTML=`Check this kit every 6 months. Sources: FEMA Ready.gov, American Red Cross, CDC. Build yours free at elimha12.github.io/hz-app/kit-builder.html`;
+ $('#list').innerHTML=L.map(c=>{const d=c.items.filter(x=>K.done[x[0]]).length;return `<section class="cat"><h3><span>${c.title}${c.tag?`<span class="tag">${c.tag}</span>`:''}</span><small>${d} of ${c.items.length}</small></h3><ul class="todo">${c.items.map(([id,t,s,q])=>`<li data-id="${id}" class="${K.done[id]?'done':''}" role="checkbox" tabindex="0" aria-checked="${!!K.done[id]}"><span class="box"></span><span class="t">${t}${s?`<small>${s}</small>`:''}</span>${q?`<span class="q">${/gal/.test(q)?q:'×'+q}</span>`:''}</li>`).join('')}</ul></section>`}).join('');
+ $$('#list li').forEach(li=>{const tg=()=>{const id=li.dataset.id;K.done[id]=!K.done[id];save();list()};li.onclick=tg;li.onkeydown=e=>{if(e.key===' '||e.key==='Enter'){e.preventDefault();tg()}}});
+ const all=L.flatMap(c=>c.items.map(x=>x[0])),dn=all.filter(id=>K.done[id]).length,pc=all.length?Math.round(dn/all.length*100):0;
+ $('#pct').textContent=pc+'%';$('#pl').textContent=pc===100?'Your kit is packed. Check it again in 6 months.':`${dn} of ${all.length} packed. Tap items as you add them.`;$('#bar').style.width=pc+'%';
+ const y=110-pc*.84;$('#fill').setAttribute('y',y);WY=y-5;}
+/* wave animation */
+let wx=0,WY=105;(function wv(){wx=(wx+.35)%40;const w=$('#wave');if(w)w.setAttribute('transform',`translate(${-wx} ${WY})`);if(!matchMedia('(prefers-reduced-motion: reduce)').matches)requestAnimationFrame(wv)})();
+
+/* ---------- actions ---------- */
+function link(){const u=new URL(location.href.split('?')[0]);u.searchParams.set('h',[K.ad,K.old,K.kid,K.baby,K.dog,K.cat,K.days].join('.'));const fl=Object.keys(K.f).filter(k=>K.f[k]);if(fl.length)u.searchParams.set('f',fl.join(','));return u.toString()}
+$('#print').onclick=()=>window.print();
+$('#share').onclick=async()=>{const url=link();if(navigator.share){try{await navigator.share({title:'Our emergency kit list',text:'Here is the emergency kit list for our family.',url})}catch(e){}}else{try{await navigator.clipboard.writeText(url);toast('Link copied')}catch(e){prompt('Copy this link:',url)}}};
+$('#ics').onclick=()=>{const d=new Date();d.setMonth(d.getMonth()+6);const ds=d.toISOString().slice(0,10).replace(/-/g,'');const nd=new Date(d.getTime()+864e5).toISOString().slice(0,10).replace(/-/g,'');
+ const ics=['BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//Hour Zero Ready//Kit Builder//EN','BEGIN:VEVENT','UID:kit-'+Date.now()+'@hourzeroready','DTSTAMP:'+new Date().toISOString().replace(/[-:]/g,'').slice(0,15)+'Z','DTSTART;VALUE=DATE:'+ds,'DTEND;VALUE=DATE:'+nd,'SUMMARY:Check our emergency kit','DESCRIPTION:Swap expiring food\\, water and medicine\\, test flashlights and the radio\\, and update the list as the family changes. '+link().replace(/,/g,'\\,'),'RRULE:FREQ=MONTHLY;INTERVAL=6','END:VEVENT','END:VCALENDAR'].join('\r\n');
+ const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([ics],{type:'text/calendar'}));a.download='emergency-kit-check.ics';document.body.appendChild(a);a.click();a.remove();toast('Open the file to add it to your calendar')};
+
+members();line();flags();list();
+})();
+</script>
+</body>
+</html>
