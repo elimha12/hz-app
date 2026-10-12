@@ -1,0 +1,578 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>The Lights-On House: A Free Emergency Preparedness Game for Your Family | Hour Zero Ready</title>
+<meta name="description" content="The power is out on your street. Win a quick challenge in each room to turn its light back on: food safety, safe water, fire hazards, generators, staying warm and packing a go-bag. Free, based on FEMA, CDC and USDA guidance.">
+<link rel="canonical" href="https://elimha12.github.io/hz-app/lights-on-house.html">
+<meta property="og:title" content="The Lights-On House">
+<meta property="og:description" content="Six rooms. Six quick challenges. Can you turn every light back on?">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://elimha12.github.io/hz-app/lights-on-house.html">
+<meta name="theme-color" content="#0A1020">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600;700;800&family=Oswald:wght@500;600;700&display=swap" rel="stylesheet">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"The Lights-On House","applicationCategory":"GameApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"description":"A free emergency preparedness game: win a challenge in each room to turn its light back on. Based on FEMA, CDC, USDA, EPA and CPSC guidance.","publisher":{"@type":"Organization","name":"Hour Zero Ready"}}
+</script>
+<style>
+:root{--night:#0A1020;--ink:#0D1220;--panel:#141B2D;--panel2:#1A2340;--line:#27324F;--cream:#ECE6DA;--mute:#98A1B6;--lamp:#F2B04A;--lamp2:#FFD58A;--frost:#8EC5E8;--alert:#E5604D;--ok:#7BC59A;--dark:#111A2E;--furn:#1F2A47}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--night);color:var(--cream);font:17px/1.55 "Inter Tight",system-ui,-apple-system,"Segoe UI",sans-serif;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+body.lock{overflow:hidden}
+a{color:var(--lamp)}
+button{font:inherit;color:inherit;-webkit-tap-highlight-color:transparent}
+:focus-visible{outline:3px solid var(--lamp);outline-offset:3px;border-radius:8px}
+#snow{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:0}
+.wrap{max-width:760px;margin:0 auto;padding:20px 18px 60px;position:relative;z-index:1}
+header{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.brand{font-family:Oswald;font-weight:600;font-size:18px;color:var(--mute);text-decoration:none;letter-spacing:.2px}
+.hbtn{background:none;border:1px solid var(--line);border-radius:999px;padding:7px 13px;font-size:14px;color:var(--mute);cursor:pointer}
+.hero{text-align:center;margin:22px 0 4px}
+.hero h1{font-family:Oswald;font-weight:600;font-size:clamp(42px,11vw,76px);line-height:.98;margin:0;letter-spacing:.3px;transition:color 1.2s,text-shadow 1.2s}
+body.lit-some .hero h1{color:#FFF3DC}
+body.lit-all .hero h1{color:var(--lamp2);text-shadow:0 0 40px rgba(242,176,74,.45)}
+.hero p{color:var(--mute);margin:12px auto 0;max-width:30em}
+/* scene */
+.scene{position:relative;margin:10px -18px 0}
+.scene svg{display:block;width:100%;height:auto;overflow:visible}
+.star{fill:#DCE6FF;animation:tw 4s ease-in-out infinite}
+@keyframes tw{50%{opacity:.25}}
+.room{cursor:pointer}
+.room .glow{opacity:0;transition:opacity .9s}
+.room .furn *{fill:var(--furn);transition:fill .9s}
+.room .furn .det{fill:#2A375C}
+.room.lit .furn *{fill:#7A4716}
+.room.lit .furn .det{fill:#9A5E22}
+.room.lit .glow{opacity:1;animation:flick 1.1s steps(1,end) 1}
+@keyframes flick{0%{opacity:0}12%{opacity:.8}20%{opacity:.1}34%{opacity:.9}42%{opacity:.35}55%{opacity:1}}
+.room .lamp{fill:#2A375C;transition:fill .6s}
+.room.lit .lamp{fill:#FFF0C8;filter:drop-shadow(0 0 6px #FFD58A)}
+.room .tap{transform-box:fill-box;transform-origin:center}
+.room .tap circle.p{fill:none;stroke:var(--lamp);stroke-width:2;animation:ping 2.2s ease-out infinite;transform-box:fill-box;transform-origin:center}
+@keyframes ping{0%{transform:scale(.6);opacity:.9}80%,100%{transform:scale(1.7);opacity:0}}
+.room .tap circle.b{fill:var(--lamp)}
+.room .tap text{fill:#1B1305;font:700 13px "Inter Tight";text-anchor:middle;dominant-baseline:central}
+.room.lit .tap{display:none}
+.room:hover .wallr{stroke:var(--lamp)}
+.room .wallr{fill:var(--dark);stroke:transparent;stroke-width:2;transition:stroke .2s}
+.room.next .tap circle.b{fill:#FFD58A}
+.rlabel{font:600 10.5px "Inter Tight";fill:#6F7A96;text-anchor:middle;pointer-events:none;transition:fill .9s}
+.room.lit .rlabel{opacity:0}
+.spill{transition:opacity 1.2s}
+.nwin{fill:#1A2340;transition:fill .8s}
+.street .nwin{fill:#FFD58A;filter:drop-shadow(0 0 4px #F2B04A)}
+.status{position:relative;z-index:2;display:flex;justify-content:center;align-items:center;gap:14px;margin:6px 0 18px;flex-wrap:wrap}
+.bulbs{display:flex;gap:6px}
+.bulbs i{width:14px;height:14px;border-radius:50%;background:#1F2A47;box-shadow:inset 0 0 0 1.5px #33405F;transition:background .5s,box-shadow .5s}
+.bulbs i.on{background:var(--lamp2);box-shadow:0 0 12px 2px rgba(242,176,74,.6)}
+.status span{color:var(--mute);font-size:15px}
+.status b{color:var(--cream)}
+.cta{position:relative;z-index:2;display:block;margin:0 auto 28px;background:var(--lamp);color:#1B1305;border:0;border-radius:16px;padding:16px 26px;font-weight:800;font-size:18px;cursor:pointer;box-shadow:0 10px 30px rgba(242,176,74,.25)}
+/* room list */
+.rooms{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:30px}
+.rc{display:flex;gap:12px;align-items:center;text-align:left;background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:12px 14px;cursor:pointer}
+.rc:hover{border-color:#3A4870}
+.rc .ic{flex:none;width:40px;height:40px;border-radius:12px;background:#1B2440;display:flex;align-items:center;justify-content:center;font-size:21px;transition:background .6s}
+.rc.lit .ic{background:linear-gradient(135deg,#FFD58A,#E39A2E)}
+.rc b{display:block;font-size:16px;line-height:1.2}
+.rc span{display:block;font-size:13px;color:var(--mute);line-height:1.3}
+.rc .st{margin-left:auto;font-size:14px;color:var(--lamp);letter-spacing:1px;flex:none}
+.why{background:var(--panel);border:1px solid var(--line);border-radius:20px;padding:18px 20px;margin-bottom:24px}
+.why h2{font-family:Oswald;font-weight:600;font-size:24px;margin:0 0 6px}
+.why p{margin:0;color:#CFC9BD;font-size:16px}
+/* sheet */
+.sheet{position:fixed;inset:0;z-index:20;display:flex;align-items:flex-end;justify-content:center;pointer-events:none}
+.sheet .scrim{position:absolute;inset:0;background:rgba(5,8,16,.7);opacity:0;transition:opacity .3s}
+.sheet .panel{position:relative;width:100%;max-width:640px;max-height:94vh;max-height:94dvh;background:linear-gradient(180deg,#151D33,#0F1628);border:1px solid var(--line);border-bottom:0;border-radius:26px 26px 0 0;transform:translateY(105%);transition:transform .42s cubic-bezier(.2,.9,.25,1);display:flex;flex-direction:column;overflow:hidden}
+.sheet.open{pointer-events:auto}
+.sheet.open .scrim{opacity:1}
+.sheet.open .panel{transform:none}
+.sh{display:flex;align-items:center;gap:12px;padding:14px 16px 10px;border-bottom:1px solid var(--line)}
+.sh .ic{width:42px;height:42px;border-radius:12px;background:#1B2440;display:flex;align-items:center;justify-content:center;font-size:22px;flex:none}
+.sh h2{font-family:Oswald;font-weight:600;font-size:23px;margin:0;line-height:1.1}
+.sh small{display:block;color:var(--mute);font-size:13px}
+.sh .x{margin-left:auto;background:var(--panel2);border:1px solid var(--line);width:38px;height:38px;border-radius:50%;cursor:pointer;font-size:18px;flex:none}
+.dots{display:flex;gap:5px;padding:10px 16px 0}
+.dots i{flex:1;height:4px;border-radius:4px;background:var(--line);transition:background .3s}
+.dots i.on{background:var(--lamp)}
+.body{padding:16px 18px 26px;overflow-y:auto;-webkit-overflow-scrolling:touch}
+.prompt{font-family:Oswald;font-weight:600;font-size:25px;line-height:1.15;margin:4px 0 6px}
+.ctx{color:var(--mute);font-size:15px;margin:0 0 16px}
+.opts{display:grid;gap:9px}
+.opt{text-align:left;background:var(--panel2);border:1.5px solid var(--line);border-radius:14px;padding:14px 16px;font-weight:600;cursor:pointer;transition:border-color .2s,background .2s,transform .15s}
+.opt:hover{border-color:#44527A}
+.opt:active{transform:scale(.98)}
+.opt.right{border-color:var(--ok);background:rgba(123,197,154,.13)}
+.opt.wrong{border-color:var(--alert);background:rgba(229,96,77,.12);animation:shake .35s}
+.opt.sel{border-color:var(--lamp);background:rgba(242,176,74,.12)}
+@keyframes shake{25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+.fb{margin-top:14px;border-radius:14px;padding:13px 15px;font-size:15.5px;line-height:1.45;animation:rise .3s}
+.fb.good{background:rgba(123,197,154,.12);border:1px solid rgba(123,197,154,.4)}
+.fb.bad{background:rgba(229,96,77,.1);border:1px solid rgba(229,96,77,.4)}
+.fb b{display:block;font-family:Oswald;font-weight:600;font-size:18px;margin-bottom:2px}
+.fb.good b{color:var(--ok)}.fb.bad b{color:#F08A7A}
+@keyframes rise{from{opacity:0;transform:translateY(8px)}}
+.next{display:block;width:100%;margin-top:16px;background:var(--lamp);color:#1B1305;border:0;border-radius:14px;padding:15px;font-weight:800;font-size:17px;cursor:pointer}
+.next:disabled{opacity:.35;cursor:default}
+/* sort cards */
+.deck{position:relative;height:260px;margin:4px 0 14px;perspective:900px}
+.card{position:absolute;inset:0 12%;background:linear-gradient(160deg,#22305A,#18213C);border:1px solid #33416A;border-radius:22px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;touch-action:none;user-select:none;cursor:grab;transition:transform .35s,opacity .35s;box-shadow:0 18px 40px rgba(0,0,0,.4)}
+.card .em{font-size:76px;line-height:1}
+.card b{font-family:Oswald;font-weight:600;font-size:26px}
+.card small{color:var(--mute);font-size:13px}
+.card .stamp{position:absolute;top:18px;font-family:Oswald;font-weight:700;font-size:24px;border:3px solid;border-radius:10px;padding:0 10px;opacity:0;transform:rotate(-12deg)}
+.card .sk{left:18px;color:var(--ok)}.card .st{right:18px;color:var(--alert);transform:rotate(12deg)}
+.card.under{transform:scale(.93) translateY(14px);opacity:.6}
+.pair{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.pair button{border:0;border-radius:16px;padding:16px;font-weight:800;font-size:18px;cursor:pointer}
+.pair .k{background:rgba(123,197,154,.18);color:var(--ok);border:1.5px solid rgba(123,197,154,.5)}
+.pair .t{background:rgba(229,96,77,.15);color:#F08A7A;border:1.5px solid rgba(229,96,77,.5)}
+.tally{text-align:center;color:var(--mute);font-size:14px;margin-top:10px}
+/* dropper */
+.drop-stage{display:flex;justify-content:center;margin:0 0 6px}
+.drop-stage svg{width:240px;height:220px}
+.dcount{text-align:center;font-family:Oswald;font-weight:600;font-size:44px;line-height:1;margin-bottom:4px}
+.dcount small{font-size:16px;color:var(--mute);font-family:"Inter Tight";font-weight:500;display:block}
+.drow{display:grid;grid-template-columns:1fr 2fr;gap:10px;margin-top:10px}
+.drow button{border-radius:14px;padding:14px;font-weight:800;cursor:pointer;border:1.5px solid var(--line);background:var(--panel2)}
+.drow .squeeze{background:var(--frost);color:#0D1220;border-color:var(--frost);font-size:18px}
+.falling{animation:fall .55s ease-in forwards}
+@keyframes fall{from{transform:translateY(0)}to{transform:translateY(96px);opacity:.2}}
+/* multi grid */
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+.gi{background:var(--panel2);border:1.5px solid var(--line);border-radius:14px;padding:12px;text-align:left;cursor:pointer;display:flex;gap:10px;align-items:center;font-weight:600;font-size:15px;line-height:1.25;transition:border-color .2s,background .2s,transform .25s,opacity .3s}
+.gi .e{font-size:26px;flex:none}
+.gi.sel{border-color:var(--lamp);background:rgba(242,176,74,.12)}
+.gi.right{border-color:var(--ok);background:rgba(123,197,154,.13)}
+.gi.wrong{border-color:var(--alert);background:rgba(229,96,77,.12)}
+.gi.miss{border-style:dashed;border-color:var(--ok)}
+.gi.gone{transform:scale(.94);opacity:.3;pointer-events:none;border-color:var(--ok)}
+.gi.gone::after{content:'✓';margin-left:auto;color:var(--ok);font-weight:900}
+.gi.no{animation:shake .35s;border-color:var(--alert)}
+/* spot scene */
+.spot{position:relative;border-radius:18px;overflow:hidden;border:1px solid var(--line);background:#121A30}
+.spot svg{display:block;width:100%;height:auto}
+.hs{cursor:pointer}
+.hs .ring{fill:none;stroke:transparent;stroke-width:4}
+.hs.found .ring{stroke:var(--alert);animation:ringin .4s}
+.hs.okay .ring{stroke:var(--ok);stroke-dasharray:6 6}
+@keyframes ringin{from{stroke-width:14;opacity:0}}
+.found-n{fill:#fff;font:800 14px "Inter Tight";text-anchor:middle;dominant-baseline:central}
+.hint{display:flex;gap:12px;align-items:center;justify-content:space-between;margin:12px 0 0;color:var(--mute);font-size:15px}
+.hint b{color:var(--cream)}
+/* garage */
+.gen{transition:transform .8s cubic-bezier(.3,1.2,.5,1)}
+.co-cloud{opacity:0}
+.co-cloud.go{animation:co 2.2s ease-out forwards}
+@keyframes co{0%{opacity:0;transform:translate(0,0) scale(.6)}25%{opacity:.85}100%{opacity:0;transform:translate(var(--dx),var(--dy)) scale(1.6)}}
+.zone{cursor:pointer}
+.zone rect{fill:rgba(242,176,74,.08);stroke:rgba(242,176,74,.55);stroke-dasharray:5 4;stroke-width:1.5;transition:fill .2s}
+.zone:hover rect{fill:rgba(242,176,74,.2)}
+.zone text{fill:var(--lamp2);font:700 11px "Inter Tight";text-anchor:middle}
+.zone.bad rect{stroke:var(--alert);fill:rgba(229,96,77,.15)}
+.zone.good rect{stroke:var(--ok);fill:rgba(123,197,154,.18)}
+/* dress */
+.dress{display:grid;grid-template-columns:130px 1fr;gap:16px;align-items:center}
+.dress svg{width:130px;height:200px}
+.layer{opacity:0;transition:opacity .5s,transform .5s;transform:translateY(-10px)}
+.layer.on{opacity:1;transform:none}
+.therm{height:10px;background:var(--line);border-radius:10px;overflow:hidden;margin:6px 0 2px}
+.therm b{display:block;height:100%;background:linear-gradient(90deg,#8EC5E8,#F2B04A,#E5604D);transition:width .6s}
+@media (max-width:420px){.dress{grid-template-columns:96px 1fr;gap:10px}.dress svg{width:96px;height:150px}}
+/* pack */
+.packhead{display:flex;align-items:center;gap:14px;margin-bottom:12px}
+.timer{position:relative;width:64px;height:64px;flex:none}
+.timer svg{width:64px;height:64px;transform:rotate(-90deg)}
+.timer span{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:Oswald;font-weight:600;font-size:22px}
+.bag{flex:1;display:flex;align-items:center;gap:10px;background:var(--panel2);border:1px solid var(--line);border-radius:14px;padding:8px 12px;min-height:56px}
+.bag .bi{font-size:30px}
+.bag .bc{display:flex;flex-wrap:wrap;gap:2px;font-size:18px}
+.bag.bump{animation:bump .3s}
+@keyframes bump{50%{transform:scale(1.05)}}
+.start{display:flex;flex-direction:column;align-items:center;text-align:center;gap:10px;padding:20px 0}
+/* lesson */
+.lesson{animation:rise .4s}
+.stars{font-size:34px;letter-spacing:4px;color:var(--lamp);text-align:center;margin:4px 0 2px}
+.stars i{font-style:normal;color:#33405F}
+.lesson h3{font-family:Oswald;font-weight:600;font-size:22px;margin:16px 0 8px}
+.lesson ul{margin:0;padding:0;list-style:none;display:grid;gap:8px}
+.lesson li{background:var(--panel2);border-radius:12px;padding:11px 14px 11px 40px;position:relative;font-size:15.5px;line-height:1.45}
+.lesson li::before{content:"";position:absolute;left:14px;top:16px;width:12px;height:12px;border-radius:50%;background:var(--lamp);box-shadow:0 0 10px rgba(242,176,74,.6)}
+.lesson .src{font-size:13px;color:var(--mute);margin:10px 0 0}
+.lesson .tool{display:block;margin-top:12px;background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:12px 14px;text-decoration:none;color:var(--cream);font-weight:700;font-size:15px}
+.lesson .tool span{display:block;color:var(--mute);font-weight:500;font-size:13.5px}
+.switch{display:flex;align-items:center;justify-content:center;gap:12px;width:100%;margin-top:18px;background:linear-gradient(180deg,#FFD58A,#F2B04A);color:#1B1305;border:0;border-radius:16px;padding:16px;font-weight:800;font-size:18px;cursor:pointer;box-shadow:0 10px 30px rgba(242,176,74,.3)}
+.switch svg{width:22px;height:22px}
+/* finale */
+.fin{position:fixed;inset:0;z-index:30;display:none;align-items:center;justify-content:center;padding:18px;background:radial-gradient(circle at 50% 30%,rgba(242,176,74,.25),rgba(10,16,32,.92) 60%)}
+.fin.open{display:flex;animation:rise .5s}
+.fin .box{max-width:460px;width:100%;background:linear-gradient(180deg,#1B2440,#121A30);border:1px solid #3A4870;border-radius:26px;padding:26px 22px;text-align:center;max-height:94vh;overflow:auto}
+.fin h2{font-family:Oswald;font-weight:600;font-size:38px;line-height:1.05;margin:4px 0 8px;color:var(--lamp2)}
+.fin p{color:#CFC9BD;margin:0 0 14px}
+.fin .acts{display:grid;gap:9px;margin-top:16px}
+.fin .acts a,.fin .acts button{display:block;border-radius:14px;padding:13px;font-weight:800;text-decoration:none;cursor:pointer;border:1px solid var(--line);background:var(--panel2);color:var(--cream);font-size:16px}
+.fin .acts .pri{background:var(--lamp);color:#1B1305;border-color:var(--lamp)}
+.fin .x2{background:none;border:0;color:var(--mute);margin-top:12px;cursor:pointer;font-size:15px}
+.book{display:grid;grid-template-columns:auto 1fr;gap:18px;align-items:center;background:linear-gradient(135deg,#1A2542,#141B2D);border:1px solid var(--line);border-radius:22px;padding:20px;margin:8px 0 22px}
+.book .cv{width:74px;height:110px;border-radius:4px;background:#0E1A30;box-shadow:0 10px 24px rgba(0,0,0,.45);display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;font-family:Oswald;line-height:1;padding:6px;border:1px solid #22304F}
+.book .cv b{font-size:17px}.book .cv i{font-style:normal;font-size:11px;color:var(--lamp);margin-top:3px}
+.book p{margin:0 0 10px;font-size:15px;color:#D7D1C5}
+.book a.btn{display:inline-block;background:var(--lamp);color:#1B1305;text-decoration:none;font-weight:800;border-radius:12px;padding:10px 16px;font-size:15px;margin:4px 8px 0 0}
+.book a.lnk{font-size:15px}
+.more{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:24px}
+.more a{text-decoration:none;color:var(--cream);background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:14px 16px;font-weight:700;font-size:15px}
+.more a span{display:block;color:var(--mute);font-weight:500;font-size:13.5px}
+footer{color:var(--mute);font-size:13px;border-top:1px solid var(--line);padding-top:16px}
+footer p{margin:0 0 8px}
+.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%) translateY(80px);opacity:0;visibility:hidden;background:var(--cream);color:var(--ink);padding:10px 18px;border-radius:999px;font-weight:700;transition:transform .25s,opacity .25s;z-index:40}
+.toast.on{transform:translateX(-50%);opacity:1;visibility:visible}
+@media (max-width:520px){.rooms{grid-template-columns:1fr}.more{grid-template-columns:1fr}.scene{margin:6px -18px 0}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition-duration:.01s!important}}
+</style>
+</head>
+<body>
+<canvas id="snow" aria-hidden="true"></canvas>
+<div class="wrap">
+ <header><a class="brand" href="./">Hour Zero Ready</a><button class="hbtn" id="snd" type="button" aria-pressed="true">Sound on</button></header>
+ <section class="hero">
+  <h1>The Lights-On House</h1>
+  <p id="lede">The power just went out on your street. Win a quick challenge in each room to turn its light back on.</p>
+ </section>
+ <div class="scene" id="scene"></div>
+ <div class="status"><div class="bulbs" id="bulbs"></div><span id="stxt"></span></div>
+ <button class="cta" id="go" type="button">Start in the kitchen</button>
+ <div class="rooms" id="rooms"></div>
+ <div class="why"><h2>Why it works</h2><p>Each room teaches one thing you'll need when the power, water or roads fail: what food to keep, how to make water safe, where a generator goes, how to stay warm, and what to grab first. It takes about 10 minutes, and every answer comes from FEMA, the CDC, USDA, EPA or the CPSC.</p></div>
+ <aside class="book">
+  <div class="cv"><b>72 HOURS</b><i>TO 6 MONTHS</i></div>
+  <div><p>Liked the game? <b>72 Hours to 6 Months</b> is the full plan behind it: power, water, food, medicine, money and family, from the first hour to the first six months. Start this weekend with about $100.</p>
+   <a class="btn" href="https://elimdal.gumroad.com/l/zcgejs" target="_blank" rel="noopener">Get the free 60-minute checklist</a>
+   <a class="lnk" href="https://elimdal.gumroad.com/l/yqudvq" target="_blank" rel="noopener">See the full guide</a></div>
+ </aside>
+ <div class="more">
+  <a href="kit-builder.html">Kit Builder<span>A printable kit list sized to your family</span></a>
+  <a href="hour-zero-clock.html">Hour Zero Clock<span>Timers for outages, boil-water notices and evacuations</span></a>
+  <a href="score.html">How ready is your home?<span>The 2-minute readiness test</span></a>
+  <a href="https://elimdal.gumroad.com/l/zcgejs" target="_blank" rel="noopener">The 60-minute checklist<span>Free, printable, one hour of work</span></a>
+ </div>
+ <footer>
+  <p>Sources: USDA and FoodSafety.gov; FEMA, Ready.gov and <i>Are You Ready?</i>; CDC (water, winter weather, carbon monoxide); EPA (emergency disinfection of drinking water); CPSC (portable generators); U.S. Fire Administration (heating and candle fire safety); American Red Cross.</p>
+  <p>Educational only. Always follow your local officials. Your progress is saved only in this browser.</p>
+ </footer>
+</div>
+
+<div class="sheet" id="sheet" aria-hidden="true">
+ <div class="scrim" id="scrim"></div>
+ <div class="panel" role="dialog" aria-modal="true" aria-labelledby="shTitle">
+  <div class="sh"><div class="ic" id="shIc"></div><div><h2 id="shTitle"></h2><small id="shSub"></small></div><button class="x" id="shX" type="button" aria-label="Close">✕</button></div>
+  <div class="dots" id="dots"></div>
+  <div class="body" id="body"></div>
+ </div>
+</div>
+<div class="fin" id="fin" role="dialog" aria-modal="true" aria-labelledby="finT"><div class="box">
+ <div class="stars" id="finStars"></div>
+ <h2 id="finT">Every light is on.</h2>
+ <p id="finP"></p>
+ <p>When one house is ready, the whole street is stronger. Send this to a neighbor and see how many lights they get.</p>
+ <div class="acts">
+  <button class="pri" type="button" id="finShare">Challenge a neighbor</button>
+  <a href="kit-builder.html">Build your real kit list</a>
+  <a href="https://elimdal.gumroad.com/l/zcgejs" target="_blank" rel="noopener">Get the free 60-minute checklist</a>
+ </div>
+ <button class="x2" type="button" id="finClose">Back to the house</button>
+</div></div>
+<div class="toast" id="toast" role="status"></div>
+
+<script>
+(function(){
+const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
+const store={get(k){try{return localStorage.getItem(k)}catch(e){return null}},set(k,v){try{localStorage.setItem(k,v)}catch(e){}}};
+const RM=matchMedia('(prefers-reduced-motion: reduce)').matches;
+function toast(t){const e=$('#toast');e.textContent=t;e.classList.add('on');clearTimeout(e._t);e._t=setTimeout(()=>e.classList.remove('on'),2200)}
+let S={done:{},sound:true,seenFin:false};try{const j=JSON.parse(store.get('loh')||'null');if(j)S=Object.assign(S,j)}catch(e){}
+const save=()=>store.set('loh',JSON.stringify(S));
+
+/* ---------- sound ---------- */
+let AC=null;function ac(){if(!AC){try{AC=new (window.AudioContext||window.webkitAudioContext)()}catch(e){}}return AC}
+function tone(f,d,type='sine',v=.08,when=0){if(!S.sound)return;const c=ac();if(!c)return;const t=c.currentTime+when,o=c.createOscillator(),g=c.createGain();o.type=type;o.frequency.setValueAtTime(f,t);g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(v,t+.01);g.gain.exponentialRampToValueAtTime(.0001,t+d);o.connect(g).connect(c.destination);o.start(t);o.stop(t+d+.05)}
+const sfx={good(){tone(660,.18,'triangle',.07);tone(990,.25,'triangle',.06,.08)},bad(){tone(150,.25,'sawtooth',.04);tone(110,.3,'sine',.07,.05)},tap(){tone(520,.06,'square',.025)},drip(){tone(1300,.09,'sine',.06);tone(700,.12,'sine',.04,.04)},
+ click(){if(!S.sound)return;const c=ac();if(!c)return;const b=c.createBuffer(1,c.sampleRate*.04,c.sampleRate),d=b.getChannelData(0);for(let i=0;i<d.length;i++)d[i]=(Math.random()*2-1)*Math.pow(1-i/d.length,6);const s=c.createBufferSource(),g=c.createGain();g.gain.value=.5;s.buffer=b;s.connect(g).connect(c.destination);s.start()},
+ on(){this.click();[523,659,784,1047].forEach((f,i)=>tone(f,.9,'sine',.05,.12+i*.09))}};
+$('#snd').onclick=()=>{S.sound=!S.sound;save();$('#snd').textContent=S.sound?'Sound on':'Sound off';$('#snd').setAttribute('aria-pressed',S.sound)};$('#snd').textContent=S.sound?'Sound on':'Sound off';
+
+/* ---------- rooms ---------- */
+const ROOMS=[
+ {id:'kitchen',name:'Kitchen',ic:'🥫',topic:'Food after the power goes out',x:200,y:240,w:92,h:78},
+ {id:'bath',name:'Bathroom',ic:'💧',topic:'Safe water',x:172,y:158,w:120,h:74},
+ {id:'living',name:'Living room',ic:'🛋️',topic:'Spot the fire and CO dangers',x:48,y:240,w:102,h:78},
+ {id:'garage',name:'Garage',ic:'⚡',topic:'Where the generator goes',x:306,y:258,w:86,h:60},
+ {id:'bed',name:'Bedroom',ic:'🛏️',topic:'Staying warm without heat',x:48,y:158,w:120,h:74},
+ {id:'closet',name:'Hall closet',ic:'🎒',topic:'Pack the go-bag, fast',x:154,y:240,w:42,h:78}];
+const FURN={
+ kitchen:`<rect x="268" y="252" width="20" height="64" rx="3"/><rect class="det" x="270" y="270" width="16" height="1.5"/><rect class="det" x="284" y="256" width="1.6" height="10"/><rect class="det" x="284" y="276" width="1.6" height="14"/><rect x="206" y="288" width="58" height="30"/><rect x="204" y="285" width="62" height="5" rx="1"/><rect class="det" x="214" y="294" width="16" height="18" rx="2"/><rect class="det" x="236" y="294" width="22" height="18" rx="2"/><rect x="210" y="256" width="34" height="18" rx="2"/><rect x="222" y="278" width="10" height="7" rx="2"/>`,
+ bath:`<rect x="180" y="208" width="62" height="20" rx="8"/><rect x="186" y="202" width="4" height="8"/><rect x="186" y="200" width="12" height="3" rx="1.5"/><rect x="258" y="196" width="16" height="22" rx="3"/><rect x="254" y="214" width="24" height="9" rx="4"/><rect x="262" y="222" width="10" height="8"/><rect x="214" y="170" width="22" height="18" rx="9"/>`,
+ living:`<rect x="58" y="292" width="62" height="20" rx="6"/><rect x="56" y="282" width="14" height="30" rx="6"/><rect x="110" y="282" width="12" height="30" rx="6"/><rect x="62" y="278" width="54" height="16" rx="6"/><rect x="134" y="262" width="3" height="54"/><rect x="128" y="312" width="15" height="4" rx="2"/><rect x="66" y="252" width="34" height="18" rx="2"/><rect class="det" x="68" y="254" width="30" height="14"/>`,
+ garage:`<path d="M316 306c0-9 6-14 14-15l9-10h24l11 10c9 1 13 6 13 15v6h-71Z"/><circle class="det" cx="332" cy="312" r="6"/><circle class="det" cx="372" cy="312" r="6"/><rect x="312" y="266" width="30" height="3"/><rect x="312" y="280" width="30" height="3"/><rect x="316" y="270" width="8" height="10" rx="1"/><rect x="330" y="272" width="10" height="8" rx="1"/>`,
+ bed:`<rect x="58" y="206" width="76" height="18" rx="4"/><rect x="56" y="190" width="8" height="34" rx="3"/><rect class="det" x="66" y="200" width="18" height="7" rx="3"/><rect x="66" y="208" width="66" height="8" rx="3"/><rect x="142" y="208" width="16" height="16" rx="2"/><rect x="148" y="198" width="3" height="10"/><rect x="104" y="170" width="30" height="22" rx="2"/><rect class="det" x="118" y="170" width="2" height="22"/>`,
+ closet:`<rect x="160" y="258" width="30" height="58" rx="2"/><rect class="det" x="184" y="286" width="3" height="5" rx="1.5"/><path d="M162 250h26" stroke="none"/><rect x="160" y="248" width="30" height="3"/><path d="M168 300c0-6 3-9 7-9s7 3 7 9v14h-14Z" class="det"/>`};
+const LAMP={kitchen:[226,250],bath:[225,168],living:[135,260],garage:[349,264],bed:[149,196],closet:[175,248]};
+
+function houseSVG(){let stars='';for(let i=0;i<46;i++){const x=Math.random()*520,y=Math.random()*130,r=Math.random()*1.1+.3;stars+=`<circle class="star" cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="${r.toFixed(2)}" style="animation-delay:${(Math.random()*4).toFixed(2)}s"/>`}
+ const neighbor=(x,s,flip)=>`<g transform="translate(${x} ${330-120*s}) scale(${s})${flip?' scale(-1,1) translate(-140 0)':''}" opacity=".85"><path d="M0 50 70 0 140 50v70H0Z" fill="#151E35"/><rect class="nwin" x="18" y="62" width="24" height="20" rx="2"/><rect class="nwin" x="58" y="62" width="24" height="20" rx="2"/><rect class="nwin" x="98" y="62" width="24" height="20" rx="2"/><rect x="60" y="92" width="20" height="28" fill="#0F1629"/></g>`;
+ let rooms=ROOMS.map((r,i)=>`<g class="room" id="r_${r.id}" data-room="${r.id}" tabindex="0" role="button" aria-label="${r.name}: ${r.topic}">
+  <rect class="wallr" x="${r.x}" y="${r.y}" width="${r.w}" height="${r.h}" rx="2"/>
+  <rect class="glow" x="${r.x}" y="${r.y}" width="${r.w}" height="${r.h}" rx="2" fill="url(#warm)"/>
+  <circle class="lamp" cx="${LAMP[r.id][0]}" cy="${LAMP[r.id][1]}" r="3.4"/>
+  <g class="furn">${FURN[r.id]}</g>
+  <text class="rlabel" x="${r.x+r.w/2}" y="${r.y+r.h-4}">${r.id==='closet'?'Closet':r.name}</text>
+  <g class="tap"><circle class="p" cx="${r.x+r.w/2}" cy="${r.y+r.h/2-6}" r="12"/><circle class="b" cx="${r.x+r.w/2}" cy="${r.y+r.h/2-6}" r="11"/><text x="${r.x+r.w/2}" y="${r.y+r.h/2-6}">${i+1}</text></g></g>`).join('');
+ return `<svg viewBox="0 0 520 380" aria-label="A house at night with six rooms">
+ <defs><radialGradient id="warm" cx=".5" cy=".15" r=".95"><stop offset="0" stop-color="#FFE6AE"/><stop offset=".55" stop-color="#F7BE5E"/><stop offset="1" stop-color="#D98B2B"/></radialGradient>
+ <radialGradient id="pool" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#F2B04A" stop-opacity=".55"/><stop offset="1" stop-color="#F2B04A" stop-opacity="0"/></radialGradient>
+ <linearGradient id="gnd" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#151E36"/><stop offset=".6" stop-color="#111930"/><stop offset="1" stop-color="#0A1020"/></linearGradient><radialGradient id="moonG" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#DCE6FF" stop-opacity=".25"/><stop offset="1" stop-color="#DCE6FF" stop-opacity="0"/></radialGradient></defs>
+ <g>${stars}</g>
+ <circle cx="455" cy="48" r="44" fill="url(#moonG)"/><circle cx="455" cy="48" r="15" fill="#E6ECFA"/><circle cx="461" cy="44" r="13" fill="#0A1020" opacity=".9"/>
+ <g id="street">${neighbor(-30,.62)}${neighbor(408,.62,true)}</g>
+ <path d="M-500 340 Q260 316 1020 340 V400 H-500Z" fill="url(#gnd)"/>
+ <ellipse class="spill" id="spill" cx="260" cy="336" rx="230" ry="26" fill="url(#pool)" opacity="0"/>
+ <g transform="translate(50 0)">
+  <rect x="236" y="78" width="18" height="44" fill="#1A2440"/>
+  <path d="M28 154 170 62 312 154Z" fill="#1A2440"/><path d="M28 154 170 62 312 154" fill="none" stroke="#2B3758" stroke-width="5" stroke-linejoin="round"/>
+  <rect x="40" y="150" width="260" height="176" fill="#24304F"/>
+  <path d="M296 252 348 226 402 252Z" fill="#1A2440"/><rect x="300" y="250" width="98" height="76" fill="#24304F"/>
+  ${rooms}
+  <rect x="40" y="232" width="260" height="8" fill="#24304F"/>
+ </g>
+ </svg>`}
+$('#scene').innerHTML=houseSVG();
+// shift room hit-area coordinates: rooms are inside translated group, so all good.
+
+/* ---------- home render ---------- */
+function render(){const n=ROOMS.filter(r=>S.done[r.id]).length;
+ ROOMS.forEach(r=>{const g=$('#r_'+r.id);g.classList.toggle('lit',!!S.done[r.id]);g.classList.remove('next')});
+ const nx=ROOMS.find(r=>!S.done[r.id]);if(nx)$('#r_'+nx.id).classList.add('next');
+ $('#bulbs').innerHTML=ROOMS.map(r=>`<i class="${S.done[r.id]?'on':''}"></i>`).join('');
+ $('#stxt').innerHTML=`<b>${n} of 6</b> lights on`;
+ $('#spill').setAttribute('opacity',(n/6).toFixed(2));
+ document.body.classList.toggle('lit-some',n>0);document.body.classList.toggle('lit-all',n===6);
+ $('#street').classList.toggle('street',n===6);
+ $('#go').textContent=n===6?'See your score':nx?(n?`Next: the ${nx.name.toLowerCase()}`:'Start in the kitchen'):'';
+ $('#lede').textContent=n===6?'Every room is lit. Your street is too.':n?`${6-n} room${6-n>1?'s':''} still dark. Keep going.`:'The power just went out on your street. Win a quick challenge in each room to turn its light back on.';
+ $('#rooms').innerHTML=ROOMS.map(r=>{const d=S.done[r.id];return `<button type="button" class="rc ${d?'lit':''}" data-room="${r.id}"><span class="ic">${r.ic}</span><span><b>${r.name}</b><span>${r.topic}</span></span><span class="st">${d?'★'.repeat(d.stars)+'<span style="color:#33405F;display:inline">'+'★'.repeat(3-d.stars)+'</span>':'Dark'}</span></button>`}).join('');
+ $$('[data-room]').forEach(el=>{el.onclick=()=>openRoom(el.dataset.room);el.onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();openRoom(el.dataset.room)}}});}
+$('#go').onclick=()=>{const nx=ROOMS.find(r=>!S.done[r.id]);if(nx)openRoom(nx.id);else showFin()};
+
+/* ---------- sheet ---------- */
+let CUR=null,STEP=0,MIS=0;
+function openRoom(id){sfx.tap();const r=ROOMS.find(x=>x.id===id);CUR=r;STEP=0;MIS=0;
+ $('#shIc').textContent=r.ic;$('#shTitle').textContent=r.name;$('#shSub').textContent=r.topic;
+ $('#sheet').classList.add('open');$('#sheet').setAttribute('aria-hidden','false');document.body.classList.add('lock');runStep();setTimeout(()=>$('#shX').focus(),350)}
+function closeSheet(){$('#sheet').classList.remove('open');$('#sheet').setAttribute('aria-hidden','true');document.body.classList.remove('lock');clearInterval(PACKT)}
+$('#shX').onclick=closeSheet;$('#scrim').onclick=closeSheet;document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeSheet();$('#fin').classList.remove('open')}});
+function dots(){const n=GAMES[CUR.id].steps.length+1;$('#dots').innerHTML=Array.from({length:n},(_,i)=>`<i class="${i<=STEP?'on':''}"></i>`).join('')}
+function runStep(){dots();const G=GAMES[CUR.id],b=$('#body');b.scrollTop=0;
+ if(STEP>=G.steps.length){lesson();return}const st=G.steps[STEP];ENG[st.t](b,st,()=>{STEP++;runStep()})}
+const fbBox=(ok,title,txt)=>`<div class="fb ${ok?'good':'bad'}"><b>${title}</b>${txt}</div>`;
+const nextBtn=(label='Next')=>`<button class="next" type="button" id="nx">${label}</button>`;
+
+/* ---------- engines ---------- */
+const ENG={
+ quiz(b,st,done){b.innerHTML=`<p class="prompt">${st.q}</p>${st.ctx?`<p class="ctx">${st.ctx}</p>`:''}<div class="opts">${st.o.map((o,i)=>`<button class="opt" type="button" data-i="${i}">${o}</button>`).join('')}</div><div id="fbq"></div>`;
+  let locked=false;$$('.opt').forEach(el=>el.onclick=()=>{if(locked)return;const i=+el.dataset.i;if(i===st.a){locked=true;el.classList.add('right');sfx.good();$('#fbq').innerHTML=fbBox(true,'Right.',st.why)+nextBtn();$('#nx').onclick=done;$('#nx').scrollIntoView({behavior:'smooth',block:'nearest'})}else{MIS++;el.classList.add('wrong');el.disabled=true;sfx.bad();$('#fbq').innerHTML=fbBox(false,'Not that one.',st.no&&st.no[i]?st.no[i]:'Try another answer.')}})},
+ sort(b,st,done){let i=0,right=0;
+  b.innerHTML=`<p class="prompt">${st.q}</p><p class="ctx">${st.ctx}</p><div class="deck" id="deck"></div><div class="pair"><button class="k" type="button" id="bk">Keep</button><button class="t" type="button" id="bt">Toss</button></div><div class="tally" id="tl"></div><div id="fbq"></div>`;
+  const deck=$('#deck');
+  function draw(){deck.innerHTML='';for(let j=Math.min(i+1,st.cards.length-1);j>=i;j--){const c=st.cards[j];const d=document.createElement('div');d.className='card'+(j>i?' under':'');d.innerHTML=`<div class="stamp sk">KEEP</div><div class="stamp st">TOSS</div><div class="em">${c[0]}</div><b>${c[1]}</b><small>${j+1} of ${st.cards.length}</small>`;deck.appendChild(d);if(j===i)drag(d)}$('#tl').textContent=`${right} right so far · swipe or tap`}
+  function answer(g,card){const c=st.cards[i],ok=g===c[2];if(ok){right++;sfx.good()}else{MIS++;sfx.bad()}
+   card=card||deck.lastChild;card.style.transition='transform .45s,opacity .45s';card.style.transform=`translateX(${g==='keep'?-140:140}%) rotate(${g==='keep'?-18:18}deg)`;card.style.opacity=0;
+   $('#fbq').innerHTML=fbBox(ok,ok?(c[2]==='keep'?'Keep it.':'Toss it.'):(c[2]==='keep'?'Actually, keep it.':'Actually, toss it.'),c[3]);
+   i++;$('#bk').disabled=$('#bt').disabled=true;setTimeout(()=>{$('#bk').disabled=$('#bt').disabled=false;if(i<st.cards.length)draw();else{deck.innerHTML=`<div class="card" style="cursor:default"><div class="em">🧊</div><b>${right} of ${st.cards.length}</b><small>sorted right</small></div>`;$('#tl').textContent='';$('#fbq').insertAdjacentHTML('beforeend',nextBtn());$('#nx').onclick=done;$('.pair').style.display='none'}},700)}
+  function drag(el){let sx=0,dx=0,on=false;const sk=el.querySelector('.sk'),stt=el.querySelector('.st');
+   el.onpointerdown=e=>{on=true;sx=e.clientX;el.setPointerCapture(e.pointerId);el.style.transition='none'};
+   el.onpointermove=e=>{if(!on)return;dx=e.clientX-sx;el.style.transform=`translateX(${dx}px) rotate(${dx/14}deg)`;sk.style.opacity=Math.max(0,-dx/90);stt.style.opacity=Math.max(0,dx/90)};
+   el.onpointerup=()=>{if(!on)return;on=false;if(Math.abs(dx)>80)answer(dx<0?'keep':'toss',el);else{el.style.transition='transform .3s';el.style.transform='';sk.style.opacity=stt.style.opacity=0}dx=0}}
+  $('#bk').onclick=()=>answer('keep');$('#bt').onclick=()=>answer('toss');draw()},
+ drops(b,st,done){let n=0,fin=false;
+  b.innerHTML=`<p class="prompt">${st.q}</p><p class="ctx">${st.ctx}</p><div class="drop-stage"><svg viewBox="0 0 240 220"><defs><linearGradient id="wg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#8EC5E8" stop-opacity=".55"/><stop offset="1" stop-color="#4E8FC0" stop-opacity=".8"/></linearGradient></defs>
+   <g id="dropper"><rect x="108" y="6" width="24" height="18" rx="9" fill="#E5604D"/><path d="M112 24h16v30l-8 14-8-14Z" fill="#DCE6FF" opacity=".85"/></g><g id="fall"></g>
+   <path d="M70 110h100l6 96a8 8 0 0 1-8 8H72a8 8 0 0 1-8-8Z" fill="url(#wg)" stroke="#8EC5E8" stroke-width="2"/><path d="M84 96h72v14H84Z" fill="#2A375C"/><text x="120" y="170" text-anchor="middle" font-family="Oswald" font-size="18" fill="#0D1220">1 GAL</text></svg></div>
+   <div class="dcount" id="dc">0<small>drops</small></div><div class="drow"><button type="button" id="dr">Reset</button><button class="squeeze" type="button" id="sq">Squeeze a drop</button></div><button class="next" type="button" id="dd">That's enough</button><div id="fbq"></div>`;
+  $('#sq').onclick=()=>{if(fin)return;n++;sfx.drip();$('#dc').innerHTML=`${n}<small>drop${n>1?'s':''}</small>`;const d=document.createElementNS('http://www.w3.org/2000/svg','path');d.setAttribute('d','M120 70c-4 6-6 9-6 12a6 6 0 0 0 12 0c0-3-2-6-6-12Z');d.setAttribute('fill','#F4EDE1');d.classList.add('falling');$('#fall').appendChild(d);setTimeout(()=>d.remove(),600)};
+  $('#dr').onclick=()=>{if(fin)return;n=0;$('#dc').innerHTML='0<small>drops</small>'};
+  $('#dd').onclick=()=>{if(fin)return;if(n===st.n){fin=true;sfx.good();$('#fbq').innerHTML=fbBox(true,`${n} drops. Exactly.`,st.why)+nextBtn();$('#dd').style.display='none';$('#nx').onclick=done;$('#nx').scrollIntoView({behavior:'smooth',block:'nearest'})}else{MIS++;sfx.bad();$('#fbq').innerHTML=fbBox(false,n<st.n?'Not enough yet.':'Too many.',n<st.n?'The water may not be fully disinfected. Add more.':'Too much bleach. Reset and try again.')}}},
+ multi(b,st,done){const sel={};b.innerHTML=`<p class="prompt">${st.q}</p><p class="ctx">${st.ctx}</p><div class="grid">${st.items.map((it,i)=>`<button type="button" class="gi" data-i="${i}"><span class="e">${it[0]}</span><span>${it[1]}</span></button>`).join('')}</div><button class="next" type="button" id="ck">Check my picks</button><div id="fbq"></div>`;
+  $$('.gi').forEach(el=>el.onclick=()=>{if(el.dataset.lock)return;const i=el.dataset.i;sel[i]=!sel[i];el.classList.toggle('sel',sel[i]);sfx.tap()});
+  $('#ck').onclick=()=>{let wrong=0;st.items.forEach((it,i)=>{const el=$(`.gi[data-i="${i}"]`);el.dataset.lock=1;el.classList.remove('sel');if(it[2]&&sel[i])el.classList.add('right');else if(!it[2]&&sel[i]){el.classList.add('wrong');wrong++}else if(it[2]&&!sel[i]){el.classList.add('miss');wrong++}});MIS+=wrong;wrong?sfx.bad():sfx.good();
+   $('#ck').style.display='none';$('#fbq').innerHTML=fbBox(!wrong,wrong?`${wrong} to fix.`:'All correct.',st.why)+nextBtn();$('#nx').onclick=done;$('#nx').scrollIntoView({behavior:'smooth',block:'nearest'})}},
+ spot(b,st,done){const found={};let n=0;b.innerHTML=`<p class="prompt">${st.q}</p><p class="ctx">${st.ctx}</p><div class="spot">${st.svg}</div><div class="hint"><span>Found <b id="fc">0</b> of ${st.hz.length}</span><span id="ht"></span></div><div id="fbq"></div>`;
+  $$('.hs').forEach(el=>el.onclick=()=>{const k=el.dataset.k,hz=st.hz.find(h=>h[0]===k);if(found[k])return;
+   if(hz){found[k]=1;n++;el.classList.add('found');sfx.good();el.insertAdjacentHTML('beforeend',`<circle cx="${el.dataset.cx}" cy="${el.dataset.cy}" r="11" fill="#E5604D"/><text class="found-n" x="${el.dataset.cx}" y="${el.dataset.cy}">${n}</text>`);$('#fc').textContent=n;$('#fbq').innerHTML=fbBox(false,`Danger ${n}: ${hz[1]}`,hz[2]);
+    if(n===st.hz.length){$('#fbq').insertAdjacentHTML('beforeend',fbBox(true,'You found them all.','This room is safe to light.')+nextBtn());$('#nx').onclick=done;setTimeout(()=>$('#nx').scrollIntoView({behavior:'smooth',block:'nearest'}),50)}}
+   else{const ok=st.safe.find(s=>s[0]===k);MIS++;sfx.bad();el.classList.add('okay');found[k]=1;$('#fbq').innerHTML=fbBox(true,'That one is fine.',ok?ok[1]:'')}});
+  let hi=0;$('#ht').innerHTML='';},
+ place(b,st,done){b.innerHTML=`<p class="prompt">${st.q}</p><p class="ctx">${st.ctx}</p><div class="spot">${st.svg}</div><div id="fbq"></div>`;let fin=false;
+  $$('.zone').forEach(z=>z.onclick=()=>{if(fin)return;const k=z.dataset.k,zd=st.zones[k];$('#gen').style.transform=`translate(${zd.x}px,${zd.y}px)`;sfx.tap();
+   setTimeout(()=>{if(zd.ok){fin=true;z.classList.add('good');sfx.good();$('#exh').style.opacity=1;$('#fbq').innerHTML=fbBox(true,'Safe spot.',zd.why)+nextBtn();$('#nx').onclick=done;$('#nx').scrollIntoView({behavior:'smooth',block:'nearest'})}
+    else{MIS++;z.classList.add('bad');sfx.bad();const c=$('#cloud');c.setAttribute('transform',`translate(${zd.x+40} ${zd.y+150})`);const p=c.querySelector('g');p.classList.remove('go');p.style.setProperty('--dx',zd.dx+'px');p.style.setProperty('--dy',zd.dy+'px');void p.getBBox();p.classList.add('go');$('#fbq').innerHTML=fbBox(false,zd.t,zd.why)}},650)})},
+ dress(b,st,done){let k=0,heat=10;b.innerHTML=`<p class="prompt">${st.q}</p><p class="ctx">${st.ctx}</p><div class="dress"><div>${st.svg}</div><div><div class="therm"><b id="hb" style="width:10%"></b></div><small class="ctx" id="hl" style="margin:0">Body heat</small><div id="dq" style="margin-top:12px"></div></div></div><div id="fbq"></div>`;
+  function ask(){if(k>=st.steps.length){$('#dq').innerHTML='';$('#fbq').innerHTML=fbBox(true,'Warm and dry.','That\'s how to dress when the heat is out.')+nextBtn();$('#nx').onclick=done;return}const s=st.steps[k];const o=Math.random()<.5?[0,1]:[1,0];
+   $('#dq').innerHTML=`<p style="margin:0 0 8px;font-weight:700">${s.q}</p><div class="opts">${o.map(i=>`<button class="opt" type="button" data-i="${i}">${s.o[i]}</button>`).join('')}</div>`;
+   $$('#dq .opt').forEach(el=>el.onclick=()=>{const i=+el.dataset.i;if(i===0){sfx.good();el.classList.add('right');if(s.layer)$('#'+s.layer).classList.add('on');heat=Math.min(100,heat+(s.heat||18));$('#hb').style.width=heat+'%';$('#fbq').innerHTML=fbBox(true,'Good.',s.why);k++;setTimeout(ask,650)}else{MIS++;sfx.bad();el.classList.add('wrong');el.disabled=true;$('#fbq').innerHTML=fbBox(false,'Not quite.',s.no)}})}ask()},
+ pack(b,st,done){let left=st.time,packed=0,started=false;const total=st.items.filter(x=>x[2]).length;const order=st.items.map((x,i)=>i).sort(()=>Math.random()-.5);
+  b.innerHTML=`<p class="prompt">${st.q}</p><p class="ctx">${st.ctx}</p><div class="start" id="pst"><button class="next" type="button" id="pgo" style="max-width:280px">Start the ${st.time}-second clock</button></div>
+   <div id="pg" style="display:none"><div class="packhead"><div class="timer"><svg viewBox="0 0 64 64"><circle cx="32" cy="32" r="27" fill="none" stroke="#27324F" stroke-width="6"/><circle id="tr" cx="32" cy="32" r="27" fill="none" stroke="#F2B04A" stroke-width="6" stroke-linecap="round" stroke-dasharray="169.6 169.6"/></svg><span id="tt">${st.time}</span></div><div class="bag" id="bag"><span class="bi">🎒</span><span class="bc" id="bc"></span><span style="margin-left:auto;font-weight:800" id="pc">0/${total}</span></div></div>
+   <div class="grid">${order.map(i=>{const it=st.items[i];return `<button type="button" class="gi" data-i="${i}"><span class="e">${it[0]}</span><span>${it[1]}</span></button>`}).join('')}</div></div><div id="fbq"></div>`;
+  $('#pgo').onclick=()=>{started=true;$('#pst').style.display='none';$('#pg').style.display='block';sfx.tap();PACKT=setInterval(()=>{left--;$('#tt').textContent=Math.max(0,left);$('#tr').setAttribute('stroke-dasharray',`${169.6*Math.max(0,left)/st.time} 169.6`);if(left<=5&&left>0)tone(880,.05,'square',.02);if(left===0){$('#tr').setAttribute('stroke','#E5604D');MIS+=2;$('#fbq').innerHTML=fbBox(false,'Time\'s up.','Keep going. In real life, a bag packed ahead saves these minutes.')}},1000)};
+  $$('#pg .gi').forEach(el=>el.onclick=()=>{const it=st.items[+el.dataset.i];if(it[2]){el.classList.add('gone');packed++;sfx.good();$('#bc').insertAdjacentText('beforeend',it[0]);$('#pc').textContent=`${packed}/${total}`;const bg=$('#bag');bg.classList.remove('bump');void bg.offsetWidth;bg.classList.add('bump');
+    if(packed===total){clearInterval(PACKT);$('#fbq').innerHTML=fbBox(true,left>0?`Packed with ${left} seconds left.`:'Packed.',st.why)+nextBtn();$('#nx').onclick=done;$('#nx').scrollIntoView({behavior:'smooth',block:'nearest'})}}
+   else{MIS++;sfx.bad();el.classList.remove('no');void el.offsetWidth;el.classList.add('no');$('#fbq').innerHTML=fbBox(false,`Leave the ${it[1].toLowerCase()}.`,it[3])}})}};
+let PACKT=null;
+
+/* ---------- scenes ---------- */
+const LIVING_SVG=`<svg viewBox="0 0 360 240" role="img" aria-label="A living room during a power outage">
+ <rect width="360" height="240" fill="#18213C"/><rect y="196" width="360" height="44" fill="#1F2A47"/>
+ <rect x="22" y="26" width="70" height="80" rx="3" fill="#0E1528" stroke="#33416A" stroke-width="3"/><circle cx="70" cy="48" r="7" fill="#DCE6FF" opacity=".6"/>
+ <path d="M14 18h88" stroke="#5A4A7A" stroke-width="4"/><path d="M16 20q10 60 0 118h20q-6-60 0-118Z" fill="#6E5A94"/><path d="M100 20q-10 60 0 118H80q6-60 0-118Z" fill="#6E5A94"/>
+ <rect x="30" y="150" width="50" height="6" rx="2" fill="#6B4A2E"/><rect x="36" y="156" width="4" height="40" fill="#6B4A2E"/><rect x="70" y="156" width="4" height="40" fill="#6B4A2E"/>
+ <rect x="50" y="134" width="8" height="16" rx="2" fill="#F4EDE1"/><path d="M54 122c-4 6-5 8-5 10a5 5 0 0 0 10 0c0-2-1-4-5-10Z" fill="#F2B04A"/>
+ <rect x="120" y="150" width="120" height="40" rx="10" fill="#3B4F7A"/><rect x="112" y="132" width="20" height="58" rx="8" fill="#3B4F7A"/><rect x="228" y="132" width="20" height="58" rx="8" fill="#3B4F7A"/><rect x="126" y="122" width="108" height="34" rx="10" fill="#465C8A"/>
+ <path d="M196 150h40v34h-40Z" fill="#B85C4A"/><path d="M196 150q-6 18 4 34" stroke="#9A4A3A" stroke-width="3" fill="none"/>
+ <rect x="252" y="160" width="28" height="30" rx="3" fill="#2A3350"/><rect x="256" y="164" width="20" height="16" rx="2" fill="#E5604D" opacity=".85"/><path d="M258 168h16M258 172h16M258 176h16" stroke="#FFD58A" stroke-width="1.5"/>
+ <rect x="292" y="118" width="60" height="38" rx="3" fill="#0E1528" stroke="#3A4870" stroke-width="3"/><rect x="306" y="156" width="32" height="40" fill="#2A3350"/><path d="M322 196q0 14 14 14h8" stroke="#8A93A8" stroke-width="2" fill="none"/><rect x="342" y="204" width="10" height="12" rx="2" fill="#8A93A8"/>
+ <ellipse cx="150" cy="212" rx="24" ry="5" fill="#111"/><path d="M128 200h44l-6 12h-32Z" fill="#2F2F35"/><path d="M134 196c4-4 8 2 12-2s8 2 12-2 6 2 10-1" stroke="#E5604D" stroke-width="3" fill="none"/><rect x="176" y="198" width="18" height="16" rx="2" fill="#8A6A4A"/><text x="185" y="209" font-size="6" text-anchor="middle" fill="#1B1305" font-family="Inter Tight" font-weight="700">COAL</text>
+ <rect x="250" y="40" width="22" height="22" rx="11" fill="#ECE6DA"/><circle cx="261" cy="51" r="4" fill="#7BC59A"/>
+ <rect x="96" y="176" width="14" height="6" rx="3" fill="#ECE6DA" transform="rotate(-10 103 179)"/><rect x="0" y="0" width="0" height="0"/>
+ <rect x="296" y="100" width="34" height="18" rx="4" fill="#4A5578"/><circle cx="306" cy="109" r="5" fill="#2A3350"/><path d="M316 104h10M316 108h10M316 112h10" stroke="#2A3350" stroke-width="2"/>
+ <g class="hs" data-k="candle" data-cx="54" data-cy="118"><circle class="ring" cx="54" cy="128" r="30"/><rect x="18" y="96" width="74" height="62" fill="transparent"/></g>
+ <g class="hs" data-k="heater" data-cx="266" data-cy="156"><circle class="ring" cx="266" cy="176" r="26"/><rect x="242" y="152" width="48" height="44" fill="transparent"/></g>
+ <g class="hs" data-k="grill" data-cx="160" data-cy="196"><circle class="ring" cx="160" cy="206" r="32"/><rect x="124" y="190" width="74" height="30" fill="transparent"/></g>
+ <g class="hs" data-k="tv" data-cx="322" data-cy="134"><circle class="ring" cx="322" cy="150" r="34"/><rect x="290" y="116" width="64" height="104" fill="transparent"/></g>
+ <g class="hs" data-k="alarm" data-cx="261" data-cy="51"><circle class="ring" cx="261" cy="51" r="18"/><rect x="244" y="34" width="34" height="34" fill="transparent"/></g>
+ <g class="hs" data-k="flash" data-cx="103" data-cy="179"><circle class="ring" cx="103" cy="179" r="14"/><rect x="90" y="168" width="26" height="22" fill="transparent"/></g>
+ <g class="hs" data-k="radio" data-cx="313" data-cy="109"><circle class="ring" cx="313" cy="109" r="16"/><rect x="294" y="98" width="38" height="22" fill="transparent"/></g>
+ </svg>`;
+const GARAGE_SVG=`<svg viewBox="0 0 360 250" role="img" aria-label="A house with an attached garage and a yard">
+ <rect width="360" height="250" fill="#141C33"/><rect y="200" width="360" height="50" fill="#1E2A44"/>
+ <path d="M0 90 70 50 140 90Z" fill="#26324F"/><rect x="0" y="90" width="140" height="110" fill="#2C3858"/>
+ <rect x="22" y="112" width="34" height="30" rx="2" fill="#FFD58A" opacity=".9"/><path d="M39 112v30M22 127h34" stroke="#2C3858" stroke-width="2"/>
+ <rect x="84" y="140" width="28" height="60" rx="2" fill="#1A2238"/>
+ <path d="M140 110h82v90h-82Z" fill="#283350"/><path d="M136 112 181 92 226 112Z" fill="#26324F"/>
+ <rect x="150" y="128" width="62" height="72" fill="#1A2238"/><path d="M150 140h62M150 152h62M150 164h62" stroke="#283350" stroke-width="2"/>
+ <path d="M240 202h120" stroke="#3A4870" stroke-width="2" stroke-dasharray="4 5"/><text x="300" y="232" text-anchor="middle" font-family="Inter Tight" font-size="11" font-weight="700" fill="#98A1B6">20+ feet from the house</text>
+ <path d="M236 214v8M356 214v8M236 218h120" stroke="#98A1B6" stroke-width="1.5"/>
+ <g class="zone" data-k="garage"><rect x="152" y="160" width="58" height="38" rx="6"/><text x="181" y="183">In the garage</text></g>
+ <g class="zone" data-k="door"><rect x="148" y="206" width="66" height="24" rx="6"/><text x="181" y="222">Door open</text></g>
+ <g class="zone" data-k="window"><rect x="12" y="150" width="56" height="44" rx="6"/><text x="40" y="176">By the window</text></g>
+ <g class="zone" data-k="yard"><rect x="270" y="150" width="78" height="48" rx="6"/><text x="309" y="178">Out in the yard</text></g>
+ <g id="gen" class="gen" style="transform:translate(0px,0px)"><g transform="translate(92 46)"><rect x="0" y="10" width="40" height="26" rx="4" fill="#E5604D"/><rect x="5" y="15" width="18" height="10" rx="2" fill="#7A2E24"/><circle cx="31" cy="21" r="4" fill="#2A1410"/><rect x="2" y="4" width="36" height="6" rx="2" fill="#3A3A40"/><circle cx="8" cy="38" r="3" fill="#222"/><circle cx="32" cy="38" r="3" fill="#222"/>
+  <g id="exh" style="opacity:0;transition:opacity .5s"><path d="M42 18h18m0 0-5-4m5 4-5 4" stroke="#7BC59A" stroke-width="2.5" fill="none" stroke-linecap="round"/></g></g></g>
+ <text x="112" y="40" text-anchor="middle" font-family="Inter Tight" font-size="11" fill="#98A1B6" font-weight="600">Tap a spot to place it</text>
+ <g id="cloud"><g class="co-cloud"><circle cx="0" cy="0" r="12" fill="#9AA3B8"/><circle cx="12" cy="-4" r="10" fill="#9AA3B8"/><circle cx="-10" cy="-6" r="9" fill="#9AA3B8"/><text x="0" y="4" text-anchor="middle" font-family="Inter Tight" font-weight="800" font-size="10" fill="#1B2440">CO</text></g></g>
+ </svg>`;
+const DRESS_SVG=`<svg viewBox="0 0 130 200" aria-hidden="true"><circle cx="65" cy="30" r="17" fill="#E8B48A"/><rect x="44" y="50" width="42" height="70" rx="14" fill="#E8B48A"/><rect x="28" y="54" width="14" height="56" rx="7" fill="#E8B48A"/><rect x="88" y="54" width="14" height="56" rx="7" fill="#E8B48A"/><rect x="47" y="116" width="15" height="70" rx="7" fill="#33405F"/><rect x="68" y="116" width="15" height="70" rx="7" fill="#33405F"/>
+ <g id="L1" class="layer"><rect x="42" y="50" width="46" height="72" rx="14" fill="#8EC5E8"/><rect x="27" y="54" width="16" height="50" rx="8" fill="#8EC5E8"/><rect x="87" y="54" width="16" height="50" rx="8" fill="#8EC5E8"/></g>
+ <g id="L2" class="layer"><rect x="40" y="50" width="50" height="74" rx="15" fill="#B79BE0"/><rect x="25" y="54" width="18" height="52" rx="9" fill="#B79BE0"/><rect x="87" y="54" width="18" height="52" rx="9" fill="#B79BE0"/></g>
+ <g id="L3" class="layer"><rect x="37" y="48" width="56" height="80" rx="16" fill="#E5604D"/><rect x="23" y="52" width="20" height="56" rx="10" fill="#E5604D"/><rect x="87" y="52" width="20" height="56" rx="10" fill="#E5604D"/><path d="M65 52v74" stroke="#A8402F" stroke-width="2"/></g>
+ <g id="L4" class="layer"><path d="M47 24a18 18 0 0 1 36 0Z" fill="#F2B04A"/><circle cx="65" cy="7" r="5" fill="#FFD58A"/><rect x="47" y="44" width="36" height="9" rx="4" fill="#F2B04A"/></g>
+ <g id="L5" class="layer"><rect x="22" y="104" width="22" height="16" rx="8" fill="#7BC59A"/><rect x="86" y="104" width="22" height="16" rx="8" fill="#7BC59A"/></g></svg>`;
+
+/* ---------- games (content from the Facts sheet) ---------- */
+const GAMES={
+ kitchen:{steps:[
+  {t:'sort',q:'Keep or toss?',ctx:'The power has been out for 6 hours. The fridge stayed closed, but it\'s past 4 hours now. Swipe left to keep, right to toss.',cards:[
+   ['🍗','Leftover chicken','toss','Meat, poultry and leftovers go after 4 hours without power.'],
+   ['🧀','Hard cheese','keep','Hard cheeses are on the USDA keep list.'],
+   ['🥛','Milk','toss','Milk, cream and yogurt go once they\'ve been above 40°F for more than 2 hours.'],
+   ['🧈','Butter','keep','Butter and margarine are on the keep list.'],
+   ['🥚','Eggs','toss','Eggs and egg dishes go.'],
+   ['🍞','Bread and tortillas','keep','Bread, bagels and tortillas are fine.'],
+   ['🍉','Cut melon','toss','Cut fruit goes. Uncut fruit is fine.'],
+   ['🥜','Peanut butter','keep','Peanut butter, jelly, mustard and ketchup are fine.']]},
+  {t:'quiz',q:'The freezer food has thawed a little.',ctx:'It still has ice crystals in it. What now?',o:['Refreeze it','Throw it all out','Taste it to check'],a:0,
+   why:'Food with ice crystals, or at 40°F or below, can be refrozen. The quality may drop, but it\'s safe (USDA).',no:{1:'You don\'t have to. Ice crystals mean it stayed cold enough to refreeze.',2:'Never taste food to check it. When in doubt, throw it out.'}}],
+  lesson:['A closed fridge keeps food safe for about <b>4 hours</b>. A full freezer holds about <b>48 hours</b>, a half-full one about <b>24</b>.','After that, toss meat, poultry, fish, eggs, dairy, leftovers and cut fruit. Hard cheese, butter, bread and peanut butter can stay.','<b>Never taste food</b> to check it. When in doubt, throw it out.'],
+  src:'USDA, FoodSafety.gov',tool:['hour-zero-clock.html?s=power','Start a live fridge timer','The Hour Zero Clock counts down your fridge and freezer.']},
+ bath:{steps:[
+  {t:'quiz',q:'A family of 4 needs water for 3 days.',ctx:'How many gallons should they store?',o:['4 gallons','12 gallons','6 gallons','3 gallons'],a:1,why:'Plan on at least 1 gallon per person, per day, for drinking and hygiene. 4 people × 3 days = 12 gallons (FEMA).',no:{0:'That\'s only one day for four people.',2:'That\'s half a gallon a day. Plan on at least 1 gallon per person, per day.',3:'That\'s one day for three people.'}},
+  {t:'drops',q:'Make 1 gallon of water safe.',ctx:'You have plain, unscented 6% bleach. Squeeze the right number of drops.',n:8,why:'8 drops of 6% bleach per gallon. With 8.25% bleach, it\'s 6 drops (EPA).'},
+  {t:'quiz',q:'You stirred it in. Now what?',ctx:'',o:['Drink it right away','Wait 30 minutes','Wait 5 minutes'],a:1,why:'Wait 30 minutes. It should smell slightly of chlorine. If it doesn\'t, add the same dose again and wait 15 more minutes (EPA).',no:{0:'The bleach needs time to work.',2:'That\'s not long enough. The EPA says 30 minutes.'}},
+  {t:'multi',q:'The taps are dry. Where can you find more water?',ctx:'Pick every source you could use after treating it.',items:[['🔥','Water heater tank',true],['🚽','Toilet tank, clear, no cleaner',true],['🧊','Ice cubes made from safe water',true],['🚾','Toilet bowl',false],['🛏️','Waterbed',false],['♨️','Heating radiator',false]],
+   why:'The water heater tank, a clean toilet tank and ice cubes all work. Never drink from the toilet bowl, a waterbed or the heating system. Treat any of it before drinking (CDC, EPA).'}],
+  lesson:['Store at least <b>1 gallon per person, per day</b>. Hot weather can double it.','No bleach handy? Boil water at a rolling boil for <b>1 minute</b>, or 3 minutes above 6,500 feet (CDC).','Bleach: <b>8 drops of 6%</b> per gallon, stir, wait <b>30 minutes</b>. Unscented only (EPA).'],
+  src:'FEMA Ready.gov, CDC, EPA',tool:['hour-zero-clock.html?s=boil','Open the boil and bleach timer','With a bleach calculator for any amount of water.']},
+ living:{steps:[
+  {t:'spot',q:'Find the 4 dangers.',ctx:'It\'s the first night without power. Tap everything in this room that could start a fire or make someone sick.',svg:LIVING_SVG,
+   hz:[['candle','Candle under the curtains','Use flashlights, not candles. If you must use one, keep it in a sturdy holder, far from anything that can burn (U.S. Fire Administration).'],
+       ['heater','Space heater against the couch','Keep space heaters at least 3 feet from furniture, blankets and curtains. Never cover them (CDC).'],
+       ['grill','Charcoal grill indoors','Never use a grill or charcoal inside, even with a window open. It can fill the room with carbon monoxide (CDC).'],
+       ['tv','TV still plugged in','Unplug TVs and computers. When the power comes back, a surge can damage them (Ready.gov).']],
+   safe:[['alarm','That\'s a CO alarm. You want one near every sleeping area, with battery backup (CDC).'],['flash','A flashlight is the safe way to light the room.'],['radio','A battery or hand-crank radio is how you\'ll hear local news.']]}],
+  lesson:['<b>Flashlights, not candles.</b> If you must use a candle, keep it in a sturdy holder, away from anything that can burn.','Space heaters need <b>3 feet</b> of clear space. Grills, camp stoves and charcoal stay <b>outside</b>.','<b>Unplug</b> TVs and computers. Power can come back with a surge.'],
+  src:'U.S. Fire Administration, CDC, FEMA Ready.gov'},
+ garage:{steps:[
+  {t:'place',q:'Where does the generator go?',ctx:'You have a portable generator. Tap the safe place to run it.',svg:GARAGE_SVG,zones:{
+   garage:{x:62,y:120,ok:false,dx:-80,dy:-50,t:'Never in the garage.',why:'Not even with the door open. Carbon monoxide builds up fast and seeps into the house (CDC).'},
+   door:{x:62,y:164,ok:false,dx:-90,dy:-70,t:'Still too close.',why:'An open garage door doesn\'t clear the fumes. Keep it at least 20 feet from the house.'},
+   window:{x:-78,y:110,ok:false,dx:10,dy:-60,t:'Too close to the window.',why:'Exhaust drifts through windows, doors and vents. Keep 20 feet away from all of them.'},
+   yard:{x:160,y:108,ok:true,why:'Outside, at least 20 feet from windows, doors and vents, with the exhaust pointed away from the house (CDC, CPSC).'}}},
+  {t:'quiz',q:'The CO alarm goes off at 2 a.m.',ctx:'Nobody feels sick yet. What do you do?',o:['Get everyone outside to fresh air, then call 911','Open a window and go back to bed','Take the alarm\'s batteries out'],a:0,why:'Get outside first, then call 911. You can\'t see or smell carbon monoxide (CDC).',no:{1:'An open window isn\'t enough. Get out first.',2:'The alarm is your last line of defense. Never silence it and stay inside.'}},
+  {t:'quiz',q:'Can you plug the generator into a wall outlet?',ctx:'It would power the whole house…',o:['No, never','Yes, with a heavy-duty cord','Yes, if the main breaker is off'],a:0,why:'That\'s called backfeeding. It can electrocute utility workers and neighbors. To power house wiring, a qualified electrician installs a transfer switch (CPSC, FEMA).',no:{1:'Use outdoor-rated cords to plug appliances into the generator, never the generator into the wall.',2:'Only a transfer switch installed by a qualified electrician does this safely.'}}],
+  lesson:['Generators run <b>outside only</b>, at least <b>20 feet</b> from windows, doors and vents.','Put battery or battery-backup <b>CO alarms</b> near every sleeping area. Alarm sounds? Get out, then call 911.','<b>Never backfeed.</b> Plug appliances in with outdoor-rated cords, or have a qualified electrician install a transfer switch.'],
+  src:'CDC, CPSC, FEMA'},
+ bed:{steps:[
+  {t:'dress',q:'Dress for a cold night.',ctx:'The heat is out and the house is getting colder. Pick the better choice each time.',svg:DRESS_SVG,steps:[
+   {q:'First layer, against your skin',o:['Wool, silk or polypropylene','A cotton T-shirt'],layer:'L1',why:'These hold more body heat than cotton.',no:'Cotton holds less heat than wool, silk or polypropylene.'},
+   {q:'Middle layer',o:['Fleece, wool or down','A thin rain jacket'],layer:'L2',heat:20,why:'The middle layer traps warm air.',no:'Save the shell for the outside. The middle layer should insulate.'},
+   {q:'Outer layer',o:['Tightly woven, wind- and water-resistant','A loose-knit sweater'],layer:'L3',heat:20,why:'The outer layer keeps wind and wet out.',no:'Wind blows right through a loose knit.'},
+   {q:'Head',o:['Hat and scarf','Nothing, it\'s indoors'],layer:'L4',why:'A hat and scarf or knit mask help a lot.',no:'Cover up. A hat and scarf help you hold heat.'},
+   {q:'Hands',o:['Mittens','Gloves'],layer:'L5',heat:16,why:'Mittens are warmer than gloves.',no:'Gloves work, but mittens are warmer.'},
+   {q:'You\'re starting to sweat.',o:['Take off a layer','Keep everything on'],why:'Sweat chills you. Wet clothing pulls heat away fast, so stay dry.',no:'Sweating makes you lose heat. Take a layer off.'}]},
+  {t:'quiz',q:'Can the oven heat the bedroom tonight?',ctx:'',o:['No, never','Yes, with the door open','Yes, for an hour'],a:0,why:'Never use an oven or stove to heat your home. Gather in one room, close the doors and use blankets and layers (CDC, U.S. Fire Administration).',no:{1:'Never. Ovens aren\'t made to heat rooms, and gas ovens can make carbon monoxide.',2:'Not even for a short time.'}}],
+  lesson:['Dress in <b>layers</b>: wool or polypropylene inside, fleece or down in the middle, a windproof shell outside. Mittens beat gloves.','<b>Stay dry.</b> Wet clothes and sweat pull heat away fast.','Never heat the house with an <b>oven, grill or camp stove</b>. If you can\'t keep warm, stay with family or friends or find a warming center.'],
+  src:'CDC (winter weather), U.S. Fire Administration'},
+ closet:{steps:[
+  {t:'pack',q:'Pack the go-bag.',ctx:'An evacuation order just came in. Tap only what belongs in the bag.',time:45,items:[
+   ['💧','Water',true],['🔦','Flashlight',true],['📻','Battery radio',true],['🩹','First aid kit',true],['💊','7-day medicine supply',true],['🔋','Phone charger and battery',true],['💵','Cash in small bills',true],['📄','Copies of IDs and insurance',true],
+   ['🍞','Toaster',false,'It needs power and won\'t help you on the road.'],['🎮','Video game console',false,'No outlets where you\'re going. Pack a book or cards for kids instead.'],['💨','Hair dryer',false,'It needs power. Leave it.'],['🔥','Space heater',false,'Too heavy, and it needs power. Pack a warm layer instead.']],
+   why:'A go-bag is what you can carry on foot. Pack it now, so it takes seconds when you need it.'},
+  {t:'quiz',q:'You\'re out the door. Who do you text first?',ctx:'Local phone lines are jammed.',o:['Your out-of-state contact','Everyone in your contacts','Nobody until it\'s over'],a:0,why:'Pick one out-of-state contact everyone in the family checks in with. Texts often get through when calls don\'t (FEMA).',no:{1:'Keep it short and to one person, so the network has room.',2:'Let someone know where you\'re going.'}}],
+  lesson:['A go-bag is what you can <b>carry</b>: water, light, radio, first aid, 7-day medicines, chargers, cash and document copies.','Choose an <b>out-of-state contact</b> the whole family checks in with.','Check the bag <b>every 6 months</b>. Swap old food, water and medicine.'],
+  src:'FEMA Ready.gov, American Red Cross',tool:['kit-builder.html','Build your real go-bag list','Sized to your family, with a printable checklist.']}};
+
+/* ---------- lesson ---------- */
+function lesson(){const G=GAMES[CUR.id],stars=MIS===0?3:MIS<=2?2:1,prev=S.done[CUR.id];
+ $('#body').innerHTML=`<div class="lesson"><div class="stars">${'★'.repeat(stars)}<i>${'★'.repeat(3-stars)}</i></div><p class="ctx" style="text-align:center;margin:0">${stars===3?'Perfect. No mistakes.':stars===2?'Nicely done.':'Done. Play it again for 3 stars.'}</p>
+  <h3>What to remember</h3><ul>${G.lesson.map(l=>`<li>${l}</li>`).join('')}</ul><p class="src">Sources: ${G.src}.</p>
+  ${G.tool?`<a class="tool" href="${G.tool[0]}">${G.tool[1]}<span>${G.tool[2]}</span></a>`:''}
+  <button class="switch" type="button" id="sw"><svg viewBox="0 0 24 24" fill="none"><path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-3.5 10.9c.6.5 1 1.2 1 2V16h5v-.1c0-.8.4-1.5 1-2A6 6 0 0 0 12 3Z" stroke="#1B1305" stroke-width="2" stroke-linejoin="round"/></svg>${prev?'Back to the house':'Turn on the light'}</button></div>`;
+ dots();$('#dots').querySelectorAll('i').forEach(i=>i.classList.add('on'));
+ if(stars===3)sfx.good();
+ $('#sw').onclick=()=>{const wasLit=!!prev;S.done[CUR.id]={stars:Math.max(stars,prev?prev.stars:0)};save();closeSheet();
+  const g=$('#r_'+CUR.id);setTimeout(()=>{$('#scene').scrollIntoView({behavior:RM?'auto':'smooth',block:'center'});
+   setTimeout(()=>{if(!wasLit){g.classList.remove('lit');void g.getBBox();sfx.on();sparkle(CUR)}render();if(!wasLit&&ROOMS.every(r=>S.done[r.id]))setTimeout(showFin,1800)},RM?0:450)},250)}}
+function sparkle(r){if(RM)return;const svg=$('#scene svg'),ns='http://www.w3.org/2000/svg',g=document.createElementNS(ns,'g');g.setAttribute('transform','translate(50 0)');svg.appendChild(g);
+ for(let i=0;i<14;i++){const c=document.createElementNS(ns,'circle');const x=r.x+Math.random()*r.w,y=r.y+r.h*.4+Math.random()*r.h*.5;c.setAttribute('cx',x);c.setAttribute('cy',y);c.setAttribute('r',Math.random()*1.6+.8);c.setAttribute('fill','#FFE6AE');g.appendChild(c);
+  c.animate([{transform:'translate(0,0)',opacity:1},{transform:`translate(${(Math.random()-.5)*30}px,${-30-Math.random()*40}px)`,opacity:0}],{duration:1200+Math.random()*800,easing:'ease-out',delay:300+Math.random()*300,fill:'forwards'})}
+ setTimeout(()=>g.remove(),2600)}
+
+/* ---------- finale ---------- */
+function showFin(){const tot=ROOMS.reduce((a,r)=>a+(S.done[r.id]?S.done[r.id].stars:0),0);$('#finStars').innerHTML=`${tot}<span style="font-size:18px;color:#98A1B6"> / 18 ★</span>`;
+ $('#finP').textContent=tot===18?'A perfect house. You didn\'t miss a thing.':`You earned ${tot} of 18 stars. Replay any room to light it brighter.`;
+ $('#fin').classList.add('open');S.seenFin=true;save();if(!RM)[523,659,784,1047,1319].forEach((f,i)=>tone(f,1.2,'sine',.045,i*.14));setTimeout(()=>$('#finShare').focus(),100)}
+$('#finClose').onclick=()=>$('#fin').classList.remove('open');
+$('#finShare').onclick=async()=>{const tot=ROOMS.reduce((a,r)=>a+(S.done[r.id]?S.done[r.id].stars:0),0);const url=location.href.split('?')[0].split('#')[0];const text=`I turned every light on in The Lights-On House with ${tot} of 18 stars. How many can you get?`;
+ if(navigator.share){try{await navigator.share({title:'The Lights-On House',text,url})}catch(e){}}else{try{await navigator.clipboard.writeText(text+' '+url);toast('Copied. Paste it to a friend.')}catch(e){prompt('Copy this:',text+' '+url)}}};
+
+/* ---------- snow ---------- */
+const cv=$('#snow'),cx=cv.getContext('2d');let P=[];function rs(){cv.width=innerWidth*devicePixelRatio;cv.height=innerHeight*devicePixelRatio;P=[]}addEventListener('resize',rs);rs();let lt=0;
+function fr(t){const dt=Math.min(.05,(t-lt)/1000||0);lt=t;const w=cv.width,h=cv.height,d=devicePixelRatio;cx.clearRect(0,0,w,h);if(!RM){while(P.length<60)P.push({x:Math.random()*w,y:Math.random()*h,r:(Math.random()*1.5+.5)*d,v:(Math.random()*16+8)*d,ph:Math.random()*6});cx.fillStyle='rgba(236,230,218,.32)';P.forEach(p=>{p.y+=p.v*dt;p.x+=Math.sin(t/1500+p.ph)*.25*d;if(p.y>h){p.y=-4;p.x=Math.random()*w}cx.beginPath();cx.arc(p.x,p.y,p.r,0,7);cx.fill()})}requestAnimationFrame(fr)}requestAnimationFrame(fr);
+
+render();
+if(location.hash==='#reset'){S.done={};save();render()}
+})();
+</script>
+</body>
+</html>
